@@ -4,6 +4,9 @@ ProofSkill is an evidence-based business assessment for the OpenAI Build Week ha
 
 The public /demo is precomputed and labeled. Real assessments require an authenticated account and are persisted per user.
 
+Repository: https://github.com/danzulu/proofskill  
+Devpost draft: https://devpost.com/software/proofskill
+
 ## What is implemented
 
 - Email/password signup, confirmation, login, logout, recovery, and password update with Supabase Auth.
@@ -111,4 +114,3 @@ The MVP intentionally contains one English scenario at one difficulty. It does n
 ## License
 
 MIT
-

@@ -13,6 +13,8 @@ All times are America/Bogota.
 - Implemented landing page, public labeled demo, private dashboard, resumable assessment flow, and evidence report.
 - Added unit tests, E2E public-demo spec, lint/typecheck/build gates, MIT license, README, video script, Devpost copy, and production checklist.
 - Gate result: unit tests, TypeScript, ESLint, and Next.js production build pass locally.
+- Published the MIT-licensed repository at https://github.com/danzulu/proofskill.
+- Created the Devpost project draft at https://devpost.com/software/proofskill.
 
 ## Remaining credentialed work
 
@@ -23,4 +25,3 @@ All times are America/Bogota.
 - Precreate and verify the judge account.
 - Record/upload the final public YouTube video.
 - Add final Production/repository/video URLs, thumbnail, screenshots, private judge credentials, and /feedback Session ID to Devpost.
-

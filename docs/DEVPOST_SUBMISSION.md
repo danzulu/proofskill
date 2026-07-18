@@ -43,7 +43,7 @@ OpenAI GPT‑5.6 Sol, Responses API, Structured Outputs, Codex, Next.js 16, Reac
 
 ## Final fields checklist
 
-- [ ] Public GitHub repository and MIT license
+- [x] Public GitHub repository and MIT license: https://github.com/danzulu/proofskill
 - [ ] Production URL
 - [ ] Public YouTube video under three minutes
 - [ ] /feedback Session ID
@@ -51,4 +51,3 @@ OpenAI GPT‑5.6 Sol, Responses API, Structured Outputs, Codex, Next.js 16, Reac
 - [ ] Private judge email and password
 - [ ] Verify private instructions contain no secrets other than judge credentials
 - [ ] Submit before 4:00 p.m. Bogota internal deadline
-
