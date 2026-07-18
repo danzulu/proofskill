@@ -4,7 +4,8 @@ ProofSkill is an evidence-based business assessment for the OpenAI Build Week ha
 
 The public /demo is precomputed and labeled. Real assessments require an authenticated account and are persisted per user.
 
-Repository: https://github.com/danzulu/proofskill  
+Repository: https://github.com/danzulu/proofskill
+
 Devpost draft: https://devpost.com/software/proofskill
 
 ## What is implemented
