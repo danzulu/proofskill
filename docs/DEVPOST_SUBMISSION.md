@@ -1,53 +1,97 @@
-# Devpost submission draft
+# Devpost submission package
 
-## Project
+## Project fields
 
-Name: ProofSkill  
-Tagline: Pressure-test business judgment and turn every score into verifiable evidence.  
-Category: Education  
-Submitter: Individual  
-Country: Colombia
+- **Name:** ProofSkill
+- **Tagline:** Pressure-test product judgment and turn every score into verifiable evidence.
+- **Submitter type:** Individual
+- **Country:** Colombia
+- **Category:** Education
+- **Production:** https://proofskill-blond.vercel.app
+- **Public demo:** https://proofskill-blond.vercel.app/demo
+- **Repository:** https://github.com/danzulu/proofskill
+- **License:** MIT
 
 ## Description
 
-ProofSkill is an evidence-based business assessment. Instead of asking learners to explain what they know, it asks them to make a strategy, changes a material condition, and measures how well they adapt.
+ProofSkill is an evidence-based product strategy assessment. Instead of asking learners to explain what they know, it asks them to make a coherent plan, changes a material condition, and measures how well they adapt.
 
 The Build Week MVP delivers one complete E-commerce / Intermediate journey:
 
-1. A learner signs in and completes an eight-field strategy canvas.
-2. GPT‑5.6 Sol generates an adaptive constraint affecting two to four fields.
-3. The learner revises the proposal and makes every adaptation explicit.
-4. A critical decision forces a visible trade-off and guardrail.
-5. GPT‑5.6 produces a structured seven-competency evaluation.
+1. A learner signs in and builds an eight-part strategy through guided decision cards.
+2. GPT-5.6 Sol generates an adaptive constraint affecting two to four fields.
+3. The learner revises each affected decision and makes the adaptation explicit.
+4. A final critical decision forces a visible trade-off, action, and guardrail.
+5. GPT-5.6 produces a structured seven-competency evaluation.
 6. Deterministic code verifies every positive quote against the saved work, applies transparent scoring rules, and persists the private report.
 
-The public demo is precomputed and explicitly labeled. Live assessments require an account, and Supabase RLS isolates each user's sessions, evaluations, evidence, and AI-run metadata.
+The result is more than a quiz score: it is a reopenable evidence trail showing the learner's original decision, adaptation, contradictions, strongest proof, primary gap, and next challenge. The private dashboard also restores unfinished sessions.
 
-## How GPT‑5.6 is used
+The public demo is precomputed and explicitly labeled. Live assessments require an account. Supabase Auth and Row Level Security isolate each user's sessions, evaluations, evidence, and AI-run metadata.
 
-- gpt-5.6-sol through the Responses API.
-- Structured Outputs with Zod for constraints and evaluations.
-- Low reasoning effort for constraint generation; medium for evaluation.
-- Storage disabled and a privacy-preserving safety identifier.
-- No request or storage of chain of thought.
+## Technological implementation
 
-GPT‑5.6 proposes the adaptive constraint and evidence draft. It does not own the final score: deterministic code verifies citations, applies rubric weights and caps, and prevents unsupported positive evidence from appearing.
+- `gpt-5.6-sol` through the OpenAI Responses API.
+- Structured Outputs with Zod for both constraints and evaluations.
+- Low reasoning effort for constraint generation and medium for evaluation.
+- `store: false`, privacy-preserving safety identifiers, differentiated failures, and one controlled citation retry.
+- Next.js 16 request-scoped auth, protected server routes, idempotent state transitions, and server-only mutations.
+- Supabase RLS plus SELECT-only authenticated grants.
+- Deterministic evidence validation, versioned scoring, visible caps, and persisted run metadata.
+
+GPT-5.6 proposes the adaptive constraint and evidence draft. It does not own the final report: deterministic application code verifies quotes, applies rubric weights and caps, and prevents unsupported positive evidence from appearing.
+
+## Design and impact
+
+ProofSkill turns assessment into an interactive pressure test. Guided cards reduce blank-page anxiety while the adaptive constraint still requires genuine reasoning. The report translates the experience into actionable learning: what the learner proved, where the strategy contradicted itself, and what challenge should come next.
+
+The same pattern can later support product management education, hiring simulations, cohort coaching, and other domains where observable judgment matters more than memorized terminology.
 
 ## How Codex was used
 
-Codex helped close scope, scaffold and implement the Next.js vertical slice, model the state machine, design Supabase RLS and least-privilege grants, implement auth callbacks and secure handlers, create tests, and prepare the deployment, video, and submission package. The Build Week log separates prior planning from event implementation.
+Codex was the primary Build Week development partner. It helped convert the brief into vertical slices, implement the Next.js and Supabase architecture, design the state machine and least-privilege policies, build the guided interactions, create tests, diagnose production deployments, verify the OpenAI integration, and prepare the final submission package. Human control remained over product choices, credentials, external accounts, live testing, and submission.
 
 ## Built with
 
-OpenAI GPT‑5.6 Sol, Responses API, Structured Outputs, Codex, Next.js 16, React 19.2, TypeScript, Supabase Auth, Postgres, RLS, Vercel, Tailwind CSS 4, shadcn/ui, Zod, Vitest, and Playwright.
+OpenAI GPT-5.6 Sol, OpenAI Responses API, Structured Outputs, Codex, Next.js 16, React 19.2, TypeScript, Supabase Auth, PostgreSQL, Row Level Security, Vercel, Tailwind CSS 4, shadcn/ui, Zod, Vitest, and Playwright.
 
-## Final fields checklist
+## Devpost custom fields
 
-- [x] Public GitHub repository and MIT license: https://github.com/danzulu/proofskill
-- [ ] Production URL
+- **Submitter Type:** Individual
+- **Country:** Colombia
+- **Category:** Education
+- **Repository URL:** https://github.com/danzulu/proofskill
+- **/feedback Session ID:** pending
+- **Plugin/dev-tool instructions:** not applicable
+
+## Private judge instructions template
+
+Paste this only into Devpost's private judging field after creating the account:
+
+```text
+Production URL: https://proofskill-blond.vercel.app/login
+
+Judge email: <JUDGE_EMAIL>
+Judge password: <JUDGE_PASSWORD>
+
+1. Sign in with the judge account; email confirmation is already complete.
+2. Open Dashboard to see saved history.
+3. Choose New assessment for a live GPT-5.6 run.
+4. The public precomputed demo is available at https://proofskill-blond.vercel.app/demo.
+
+Please do not change the account password during judging.
+```
+
+Never commit the completed credentials to GitHub.
+
+## Status
+
+- [x] Public repository and MIT license
+- [x] Production URL
+- [x] Public labeled demo
+- [x] Thumbnail and screenshots
+- [x] README, architecture, setup, sample data, and tests
+- [ ] Judge account and private instructions
 - [ ] Public YouTube video under three minutes
-- [ ] /feedback Session ID
-- [ ] Thumbnail and screenshots
-- [ ] Private judge email and password
-- [ ] Verify private instructions contain no secrets other than judge credentials
-- [ ] Submit before 4:00 p.m. Bogota internal deadline
+- [ ] `/feedback` Session ID
+- [ ] Final Devpost review and submission

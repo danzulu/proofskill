@@ -1,56 +1,68 @@
-# Final demo script — target 2:50
+# ProofSkill final demo script
 
-## 0:00–0:18 — Problem
+Target duration: 2:45-2:55. Record the real Production app with narration. Use the prepared judge account; do not create an account or type credentials on screen.
 
-“Most assessments reward polished answers. ProofSkill tests whether someone can adapt when the conditions change—and proves every positive finding with their own exact words.”
+## 0:00-0:17 - Problem and promise
 
-Show the landing hero and the “Evidence is earned” message.
+**Voiceover:** "Most assessments reward polished answers or self-reported confidence. ProofSkill tests whether someone can adapt when the conditions change - and proves every positive finding with their own exact words."
 
-## 0:18–0:32 — Login and history
+**Show:** Landing hero, the line "Confidence is easy. Evidence is earned," and the example evidence card.
 
-“A judge account avoids email delays. Every live attempt belongs to that user and can be resumed or reopened from a private dashboard.”
+## 0:17-0:31 - Login and persistent history
 
-Show sign in and dashboard with one completed and one pending attempt.
+**Voiceover:** "Every live attempt belongs to an authenticated learner. From a private dashboard they can resume unfinished work or reopen a verified report."
 
-## 0:32–1:10 — Challenge
+**Show:** Sign in with the prepared account, then the dashboard history. Keep the email outside the crop if possible.
 
-“The Build Week MVP focuses on one Intermediate E-commerce scenario. The learner completes an eight-part business canvas.”
+## 0:31-1:05 - Guided challenge
 
-Show scenario context and the prepared canvas. Scroll through all eight fields without typing live.
+**Voiceover:** "The Build Week MVP focuses on one Intermediate e-commerce scenario. Instead of a blank form, the learner builds an eight-part strategy through guided decision cards and can add detail only when it helps."
 
-## 1:10–1:35 — Adaptive constraint
+**Show:** Scenario context, card selection, progress through the eight decisions, and the Continue interaction. Avoid typing long text live.
 
-“GPT‑5.6 Sol creates a material constraint and identifies the two to four canvas fields it invalidates.”
+## 1:05-1:30 - Adaptive constraint
 
-Show the paid acquisition freeze and affected-field badges.
+**Voiceover:** "GPT-5.6 Sol creates a material constraint based on the complete proposal and identifies the two to four decisions that must change."
 
-## 1:35–1:55 — Revision
+**Show:** Generate the constraint, loading state, constraint text, and affected-field badges.
 
-“The learner must revise the canvas, explain an adaptation for every affected field, and state what to keep, remove, and measure.”
+## 1:30-1:52 - Guided revision
 
-Show revised fields and the adaptation section.
+**Voiceover:** "The learner must adapt every affected decision, choose what to preserve and remove, and define how the revision will be measured."
 
-## 1:55–2:10 — Critical decision
+**Show:** Select revision cards, the selected-state treatment, and Lock revision.
 
-“Finally, they make a trade-off, name the first action, and define a stop guardrail.”
+## 1:52-2:07 - Critical decision
 
-Show the bounded experiment option and prepared rationale.
+**Voiceover:** "A final decision forces a visible trade-off, a first action, and a stop guardrail."
 
-## 2:10–2:35 — Report and persistence
+**Show:** Select the bounded experiment and its guardrail, then submit.
 
-“The report scores seven competencies. Model-proposed quotes are checked deterministically against the saved submission. Invalid positive evidence is never shown. The report remains in the dashboard.”
+## 2:07-2:34 - Verified report
 
-Show score, bars, verified quote, before and after, and main gap. Return to dashboard and reopen the report.
+**Voiceover:** "GPT-5.6 returns a structured seven-competency evaluation. Application code then checks every positive quote against the saved submission, applies deterministic weights and caps, and refuses to display unsupported positive evidence. The completed report remains in the dashboard."
 
-## 2:35–2:50 — GPT‑5.6 and Codex
+**Show:** Score, competency bars, exact verified quote, before/after change, primary gap, next challenge, then return to Dashboard and reopen the report.
 
-“GPT‑5.6 generates the adaptive constraint and structured evaluation. Deterministic code owns verification and scoring. Codex accelerated the Next.js vertical slice, Supabase RLS, tests, and deployment package during Build Week.”
+## 2:34-2:50 - Technology and Build Week
 
-Show the architecture or README and the Production URL.
+**Voiceover:** "GPT-5.6 generates the adaptive constraint and structured evaluation; deterministic code owns evidence validity and scoring. Codex accelerated the Next.js vertical slice, Supabase RLS, tests, deployment debugging, and submission package during Build Week."
 
-## 2:50–2:55 — Close
+**Show:** Brief README architecture section or a clean architecture slide, plus the Production URL.
 
-“ProofSkill: confidence is easy; evidence is earned.”
+## 2:50-2:55 - Close
 
-Recording rules: public YouTube, narration enabled, under three minutes, Production build, no live account creation, and no private credentials visible.
+**Voiceover:** "ProofSkill: confidence is easy; evidence is earned."
 
+**Show:** Logo and tagline.
+
+## Recording checklist
+
+- Public YouTube video.
+- Under three minutes after upload processing.
+- Voiceover is clear and audible.
+- Production app, not localhost.
+- No passwords, API keys, private Devpost fields, browser bookmarks, notifications, or personal email visible.
+- Keep a prepared completed report as fallback if a live API call is slow.
+- Show the public demo banner if the fixture route appears.
+- Mention both GPT-5.6 and Codex explicitly.

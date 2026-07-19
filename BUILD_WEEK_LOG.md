@@ -1,27 +1,49 @@
 # ProofSkill Build Week log
 
-All times are America/Bogota.
+All dates and times use America/Bogota.
 
-## July 17, 2026
+## Prior work
 
-- Closed MVP scope around one E-commerce / Intermediate vertical slice.
-- Selected Supabase Auth instead of a second identity provider to keep identity and user-owned results in one authorization system.
-- Scaffolded Next.js 16, React 19.2.4, TypeScript strict, Tailwind 4, Geist, and shadcn/ui.
-- Added email/password, email confirmation route, Google OAuth callback, recovery, update-password, logout, and safe internal redirects.
+- A product concept and planning document existed before Build Week.
+- No production application, authenticated assessment flow, AI evaluation pipeline, persistence layer, or deployed submission existed before the event.
+
+## July 17, 2026 - foundation and vertical slice
+
+- Closed the MVP around one E-commerce / Intermediate scenario.
+- Selected Supabase Auth as the only identity source.
+- Scaffolded Next.js 16, React 19.2, TypeScript strict, Tailwind CSS 4, Geist, and shadcn/ui.
+- Added email/password, email confirmation, Google OAuth callback, recovery, update-password, logout, and safe internal redirects.
 - Added the Supabase schema, RLS policies, read-only authenticated grants, foreign-key indexes, and server-only mutation pattern.
-- Implemented the scenario, state machine, fixture/OpenAI adapters, deterministic scoring, evidence verification, retry, AI-run metadata, and report idempotency.
-- Implemented landing page, public labeled demo, private dashboard, resumable assessment flow, and evidence report.
-- Added unit tests, E2E public-demo spec, lint/typecheck/build gates, MIT license, README, video script, Devpost copy, and production checklist.
-- Gate result: unit tests, TypeScript, ESLint, and Next.js production build pass locally.
-- Published the MIT-licensed repository at https://github.com/danzulu/proofskill.
-- Created the Devpost project draft at https://devpost.com/software/proofskill.
+- Implemented the state machine, fixture/OpenAI adapters, deterministic scoring, evidence validation, retry behavior, AI-run metadata, and report idempotency.
+- Implemented the landing page, labeled public demo, private dashboard, resumable flow, and evidence report.
+- Added unit tests, a public-demo E2E spec, lint/typecheck/build gates, an MIT license, and the first submission drafts.
+- Published the public repository and created the Devpost draft.
 
-## Remaining credentialed work
+## July 18, 2026 - interaction and deployment hardening
 
-- Create/link the dedicated Supabase project and apply the migration.
-- Configure Google OAuth, email template, redirects, and final Production SITE_URL.
-- Add the OpenAI API key and run one GPT‑5.6 live smoke assessment.
-- Create/link Vercel, set environment variables, validate Preview, and promote the same artifact.
-- Precreate and verify the judge account.
-- Record/upload the final public YouTube video.
-- Add final Production/repository/video URLs, thumbnail, screenshots, private judge credentials, and /feedback Session ID to Devpost.
+- Replaced large free-text sections with guided selection cards and optional detail so the assessment feels like an interactive decision exercise.
+- Added card-based revision adaptations, preservation/removal choices, measurement choices, and visible selected states.
+- Audited pointer cursors and interaction affordances for buttons and selectable cards.
+- Fixed registration/login redirects and dashboard session behavior across Vercel URLs.
+- Corrected Vercel environment variables and redeployed a working Preview and Production build.
+- Added a dedicated application icon and verified the production asset.
+
+## July 19, 2026 - live AI, security, and submission package
+
+- Connected the dedicated Supabase project and verified the remote migration.
+- Confirmed four RLS-enabled tables, read-only authenticated grants, and owner-scoped SELECT policies.
+- Connected the OpenAI project, verified `gpt-5.6-sol`, and completed a live constraint and evaluation flow.
+- Verified fixture and live reports persist in the private dashboard.
+- Ran local lint, TypeScript, unit tests, E2E coverage, and production build gates.
+- Audited Supabase Security and Performance Advisors and documented the remaining warning and informational item.
+- Captured public, PII-free screenshots and uploaded the Devpost thumbnail.
+- Reworked README, architecture, security, video, and Devpost materials for judges.
+
+## Remaining submission actions
+
+- Enable Supabase leaked-password protection or document the final decision.
+- Complete a final two-account cross-user isolation check and Google OAuth incognito smoke test.
+- Create and verify the judge account; share credentials only in Devpost's private field.
+- Record and upload the public YouTube video under three minutes.
+- Run `/feedback` in the Codex task containing most of the core work and copy its Session ID.
+- Complete the remaining Devpost fields and submit before the internal deadline: July 21 at 4:00 p.m. Bogota.
