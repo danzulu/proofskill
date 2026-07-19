@@ -6,21 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { requireUser } from "@/lib/auth";
-import type { AssessmentStatus, RunMode } from "@/lib/domain/assessment";
+import type { RawDashboardSession } from "@/lib/dashboard";
+import { getBestDashboardScore, normalizeDashboardSessions } from "@/lib/dashboard";
+import type { AssessmentStatus } from "@/lib/domain/assessment";
 import { nextAssessmentPath } from "@/lib/domain/state-machine";
 import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
-
-type DashboardSession = {
-  id: string;
-  status: AssessmentStatus;
-  run_mode: RunMode;
-  difficulty: string;
-  created_at: string;
-  completed_at: string | null;
-  evaluations: Array<{ total_score: number; level: string }>;
-};
 
 function statusLabel(status: AssessmentStatus) {
   const labels: Record<AssessmentStatus, string> = {
@@ -43,7 +35,8 @@ export default async function DashboardPage() {
     .from("assessment_sessions")
     .select("id,status,run_mode,difficulty,created_at,completed_at,evaluations(total_score,level)")
     .order("created_at", { ascending: false });
-  const sessions = (data || []) as DashboardSession[];
+  const sessions = normalizeDashboardSessions((data || []) as RawDashboardSession[]);
+  const bestScore = getBestDashboardScore(sessions);
   return (
     <div className="min-h-screen">
       <SiteHeader />
@@ -60,7 +53,7 @@ export default async function DashboardPage() {
         <div className="mt-10 grid gap-5 sm:grid-cols-3">
           <Card><CardContent className="p-5"><p className="text-sm text-muted-foreground">Attempts</p><p className="mt-2 font-mono text-3xl">{sessions.length}</p></CardContent></Card>
           <Card><CardContent className="p-5"><p className="text-sm text-muted-foreground">Completed</p><p className="mt-2 font-mono text-3xl">{sessions.filter((item) => item.status === "completed").length}</p></CardContent></Card>
-          <Card><CardContent className="p-5"><p className="text-sm text-muted-foreground">Best score</p><p className="mt-2 font-mono text-3xl">{Math.max(0, ...sessions.flatMap((item) => item.evaluations.map((evaluation) => evaluation.total_score))) || "—"}</p></CardContent></Card>
+          <Card><CardContent className="p-5"><p className="text-sm text-muted-foreground">Best score</p><p className="mt-2 font-mono text-3xl">{bestScore ?? "—"}</p></CardContent></Card>
         </div>
 
         <Card className="mt-8">
@@ -93,4 +86,3 @@ export default async function DashboardPage() {
     </div>
   );
 }
-
