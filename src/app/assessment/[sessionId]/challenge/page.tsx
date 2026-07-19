@@ -1,8 +1,12 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AssessmentShell } from "@/components/assessment-shell";
 import { CanvasForm } from "@/components/canvas-form";
 import { GenerateConstraintButton } from "@/components/generate-constraint-button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { isLiveAIConfigured } from "@/lib/ai/availability";
 import { requireUser } from "@/lib/auth";
 import { canvasSchema } from "@/lib/domain/assessment";
 import { ECOMMERCE_SCENARIO } from "@/lib/domain/scenario";
@@ -19,6 +23,7 @@ export default async function ChallengePage({
   const { sessionId } = await params;
   await requireUser("/assessment/" + sessionId + "/challenge");
   const session = await getSessionForPage(sessionId);
+  const liveUnavailable = session.run_mode === "live" && !isLiveAIConfigured();
   if (!["challenge", "initial_submitted", "constraint_generating"].includes(session.status)) {
     redirect(nextAssessmentPath(sessionId, session.status));
   }
@@ -32,7 +37,19 @@ export default async function ChallengePage({
           {ECOMMERCE_SCENARIO.context.map((item) => <li className="rounded-lg border border-white/8 bg-card/50 p-3" key={item}>{item}</li>)}
         </ul>
       </div>
-      {session.status === "challenge" ? (
+      {liveUnavailable ? (
+        <Card className="border-destructive/30">
+          <CardHeader>
+            <CardTitle>Live AI is not configured in this environment</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-5">
+            <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+              This live session remains saved and can continue after <code>OPENAI_API_KEY</code> is added and the deployment is rebuilt. To test the full experience now, start a clearly labeled fixture rehearsal.
+            </p>
+            <Button asChild><Link href="/assessment/new">Start a fixture rehearsal</Link></Button>
+          </CardContent>
+        </Card>
+      ) : session.status === "challenge" ? (
         <CanvasForm sessionId={sessionId} initial={session.initial_canvas ? canvasSchema.parse(session.initial_canvas) : null} />
       ) : (
         <GenerateConstraintButton sessionId={sessionId} />
@@ -40,4 +57,3 @@ export default async function ChallengePage({
     </AssessmentShell>
   );
 }
-

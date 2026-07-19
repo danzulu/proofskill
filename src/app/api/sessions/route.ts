@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { areFixturesEnabled, isLiveAIConfigured } from "@/lib/ai/availability";
 import { authenticateApi, fail, ok } from "@/lib/api";
 import { ECOMMERCE_SCENARIO } from "@/lib/domain/scenario";
 import { getAdminClient } from "@/lib/supabase/admin";
@@ -13,8 +14,15 @@ export async function POST(request: Request) {
   if (!user) return fail("UNAUTHENTICATED", "Sign in to start an assessment.", 401);
   const parsed = requestSchema.safeParse(await request.json().catch(() => ({})));
   if (!parsed.success) return fail("INVALID_REQUEST", "Invalid run mode.", 400);
-  if (parsed.data.run_mode === "fixture" && process.env.ENABLE_AI_FIXTURES !== "true") {
+  if (parsed.data.run_mode === "fixture" && !areFixturesEnabled()) {
     return fail("FIXTURES_DISABLED", "Fixture assessments are disabled.", 403);
+  }
+  if (parsed.data.run_mode === "live" && !isLiveAIConfigured()) {
+    return fail(
+      "OPENAI_NOT_CONFIGURED",
+      "Live AI is not configured in this environment. Start a fixture rehearsal or add OPENAI_API_KEY and redeploy.",
+      503,
+    );
   }
 
   const { data, error } = await getAdminClient()
@@ -32,4 +40,3 @@ export async function POST(request: Request) {
   if (error) return fail("DATABASE_ERROR", "Could not create the session.", 500, true);
   return ok(data, "/assessment/" + data.id + "/challenge", { status: 201 });
 }
-

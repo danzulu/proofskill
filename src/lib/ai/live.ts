@@ -14,7 +14,13 @@ let client: OpenAI | null = null;
 
 function getOpenAI() {
   const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new AssessmentAIError("OPENAI_NOT_CONFIGURED", false);
+  if (!apiKey) {
+    throw new AssessmentAIError(
+      "OPENAI_NOT_CONFIGURED",
+      false,
+      "Live AI is not configured in this environment. Start a fixture rehearsal or add OPENAI_API_KEY and redeploy.",
+    );
+  }
   client ??= new OpenAI({ apiKey, timeout: 55_000, maxRetries: 0 });
   return client;
 }
@@ -101,4 +107,3 @@ export class LiveAssessmentAI implements AssessmentAI {
     }
   }
 }
-
