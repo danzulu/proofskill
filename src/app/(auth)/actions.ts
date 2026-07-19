@@ -50,10 +50,7 @@ export async function signupAction(_state: AuthState, formData: FormData) {
   });
   if (error) return { message: error.message };
   if (data.session) redirect(next);
-  return {
-    success: true,
-    message: "Check your inbox to confirm your email, then return to sign in.",
-  };
+  redirect(`/login?notice=check-email&next=${encodeURIComponent(next)}`);
 }
 
 export async function googleAction(formData: FormData) {
@@ -100,4 +97,3 @@ export async function logoutAction() {
   await supabase.auth.signOut();
   redirect("/");
 }
-

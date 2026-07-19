@@ -17,9 +17,11 @@ import {
 export function AuthForm({
   mode,
   next,
+  notice,
 }: {
   mode: "login" | "signup";
   next: string;
+  notice?: string;
 }) {
   const action = mode === "login" ? loginAction : signupAction;
   const [state, formAction, pending] = useActionState<AuthState, FormData>(
@@ -76,9 +78,9 @@ export function AuthForm({
               />
             </div>
           )}
-          {state?.message && (
-            <Alert variant={state.success ? "default" : "destructive"}>
-              <AlertDescription>{state.message}</AlertDescription>
+          {(state?.message ?? notice) && (
+            <Alert variant={state?.message && !state.success ? "destructive" : "default"}>
+              <AlertDescription>{state?.message ?? notice}</AlertDescription>
             </Alert>
           )}
           <Button className="w-full" disabled={pending}>
@@ -110,4 +112,3 @@ export function AuthForm({
     </Card>
   );
 }
-
