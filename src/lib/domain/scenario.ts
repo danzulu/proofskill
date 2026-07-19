@@ -12,6 +12,33 @@ type CanvasDecision = {
   }[];
 };
 
+type RevisionDecision = {
+  label: string;
+  prompt: string;
+  coaching: string;
+  choices: readonly {
+    id: string;
+    title: string;
+    tradeoff: string;
+    revision: string;
+    adaptation: string;
+  }[];
+};
+
+export type RevisionStrategyKey = "keep" | "remove" | "measure";
+
+type RevisionStrategyDecision = {
+  label: string;
+  prompt: string;
+  coaching: string;
+  choices: readonly {
+    id: string;
+    title: string;
+    tradeoff: string;
+    response: string;
+  }[];
+};
+
 export const ECOMMERCE_SCENARIO = {
   id: "ecommerce-cart-recovery",
   version: "2026-07-17.1",
@@ -277,6 +304,368 @@ export const ECOMMERCE_CANVAS_DECISIONS = {
     ],
   },
 } as const satisfies Record<CanvasKey, CanvasDecision>;
+
+export const ECOMMERCE_REVISION_DECISIONS = {
+  problem: {
+    label: "Problem",
+    prompt: "How should the problem change under this pressure?",
+    coaching: "Choose the reframing that keeps the team focused on an observable business outcome.",
+    choices: [
+      {
+        id: "narrow_behavior",
+        title: "Narrow the behavior",
+        tradeoff: "Sharper focus",
+        revision:
+          "Under the new constraint, narrow the problem to the highest-intent behavior the team can observe and influence during this experiment.",
+        adaptation:
+          "The problem is narrowed to an observable high-intent behavior so the team can respond within the new constraint.",
+      },
+      {
+        id: "protect_economics",
+        title: "Protect the economics",
+        tradeoff: "Business guardrail",
+        revision:
+          "Reframe the problem as recovering qualified conversion without creating discount leakage or weakening contribution margin.",
+        adaptation:
+          "The problem now makes the economic downside explicit instead of treating conversion volume as the only outcome.",
+      },
+      {
+        id: "surface_tradeoff",
+        title: "Name the trade-off",
+        tradeoff: "Decision clarity",
+        revision:
+          "Define the problem as choosing which customer friction to remove while accepting that reach, speed, and margin cannot all be maximized at once.",
+        adaptation:
+          "The problem now exposes the core trade-off the constraint forces the team to manage.",
+      },
+    ],
+  },
+  target_customer: {
+    label: "Target customer",
+    prompt: "Which customer should remain in scope now?",
+    coaching: "A tighter cohort reduces reach, but makes the revised experiment more defensible.",
+    choices: [
+      {
+        id: "highest_intent",
+        title: "Prioritize highest intent",
+        tradeoff: "Fast signal",
+        revision:
+          "Limit the revised plan to shoppers who already demonstrate strong purchase intent, so the team spends its constrained capacity where behavior can change fastest.",
+        adaptation:
+          "The audience is narrowed to the highest-intent cohort to improve learning speed and reduce wasted exposure.",
+      },
+      {
+        id: "trust_sensitive",
+        title: "Prioritize trust-sensitive buyers",
+        tradeoff: "Customer confidence",
+        revision:
+          "Focus on shoppers whose purchase decision depends most on clear cost, delivery, and return information rather than a broad incentive.",
+        adaptation:
+          "The target shifts toward customers whose barrier can be resolved through confidence instead of discounting.",
+      },
+      {
+        id: "profitable_cohort",
+        title: "Prioritize profitable demand",
+        tradeoff: "Margin quality",
+        revision:
+          "Restrict eligibility to a measurable cohort with enough basket value and contribution potential to absorb the experiment cost.",
+        adaptation:
+          "The target now includes an explicit economic eligibility rule that protects contribution margin.",
+      },
+    ],
+  },
+  value_proposition: {
+    label: "Value proposition",
+    prompt: "Which promise still works without ignoring the constraint?",
+    coaching: "Choose a promise the product can prove during the revised experiment.",
+    choices: [
+      {
+        id: "clarity_over_discount",
+        title: "Trade discounts for clarity",
+        tradeoff: "Trust",
+        revision:
+          "Make confidence the revised promise: shoppers see total cost, delivery timing, and return terms before committing, without a blanket discount.",
+        adaptation:
+          "The value proposition moves from price relief to decision clarity that can preserve both trust and margin.",
+      },
+      {
+        id: "remove_effort",
+        title: "Remove effort",
+        tradeoff: "Convenience",
+        revision:
+          "Promise a shorter and more predictable mobile path to purchase, concentrating value in reduced effort rather than a larger incentive.",
+        adaptation:
+          "The promise is adapted around convenience, which the team can deliver within the constrained scope.",
+      },
+      {
+        id: "qualified_value",
+        title: "Offer qualified value",
+        tradeoff: "Selective benefit",
+        revision:
+          "Reserve any benefit for a clearly eligible barrier and explain why it is relevant, avoiding an expectation that every visit earns a discount.",
+        adaptation:
+          "The benefit becomes conditional and relevant, reducing broad exposure while retaining customer value.",
+      },
+    ],
+  },
+  solution: {
+    label: "Solution",
+    prompt: "What should the team change in the solution?",
+    coaching: "The strongest revision is small enough to ship, measure, and reverse.",
+    choices: [
+      {
+        id: "reduce_scope",
+        title: "Reduce to one intervention",
+        tradeoff: "Shipping speed",
+        revision:
+          "Reduce the revised solution to one customer-facing intervention that can ship inside the available window and be evaluated independently.",
+        adaptation:
+          "The solution is reduced to a single testable intervention so the constraint does not create an unshippable bundle.",
+      },
+      {
+        id: "instrument_first",
+        title: "Instrument before scaling",
+        tradeoff: "Learning quality",
+        revision:
+          "Add explicit exposure, completion, and guardrail instrumentation before expanding the solution beyond the first qualified cohort.",
+        adaptation:
+          "The solution now prioritizes reliable measurement before broader rollout under uncertainty.",
+      },
+      {
+        id: "reversible_path",
+        title: "Make it reversible",
+        tradeoff: "Risk control",
+        revision:
+          "Ship the solution behind a bounded treatment with a clear stop condition, preserving the ability to withdraw it if the constraint worsens.",
+        adaptation:
+          "The solution becomes reversible and bounded, limiting downside while the team learns.",
+      },
+    ],
+  },
+  acquisition: {
+    label: "Acquisition",
+    prompt: "Where should customers encounter the revised plan?",
+    coaching: "Concentrate exposure where intent is strongest and wasted reach is lowest.",
+    choices: [
+      {
+        id: "owned_channel",
+        title: "Move to owned recovery",
+        tradeoff: "Lower media cost",
+        revision:
+          "Use consented owned recovery for qualified abandoners, avoiding additional paid acquisition cost while the revised intervention is being proven.",
+        adaptation:
+          "Acquisition shifts to an owned channel so the team can test without adding expensive reach.",
+      },
+      {
+        id: "intent_trigger",
+        title: "Trigger at intent",
+        tradeoff: "Less exposure",
+        revision:
+          "Expose the intervention only after a shopper reaches a high-intent mobile checkout event instead of showing it across the full journey.",
+        adaptation:
+          "Exposure is moved closer to purchase intent, reducing waste and limiting the constraint's downside.",
+      },
+      {
+        id: "message_continuity",
+        title: "Preserve message continuity",
+        tradeoff: "CAC efficiency",
+        revision:
+          "Align the paid promise, landing experience, and checkout message for the selected cohort before buying any additional traffic.",
+        adaptation:
+          "Acquisition now improves continuity for existing traffic rather than depending on more spend.",
+      },
+    ],
+  },
+  retention: {
+    label: "Retention",
+    prompt: "How should the revised plan create durable value?",
+    coaching: "Keep the return loop tied to a better experience, not permanent incentives.",
+    choices: [
+      {
+        id: "prove_promise",
+        title: "Prove the promise after purchase",
+        tradeoff: "Trust loop",
+        revision:
+          "Use delivery visibility, responsive support, and clear returns to prove the revised checkout promise after the first order.",
+        adaptation:
+          "Retention is anchored in proving the experience rather than repeating the acquisition incentive.",
+      },
+      {
+        id: "reduce_next_effort",
+        title: "Make the next visit easier",
+        tradeoff: "Convenience loop",
+        revision:
+          "With permission, preserve useful preferences and context so a returning shopper faces less effort on the next mobile purchase.",
+        adaptation:
+          "Retention shifts toward saved effort that remains valuable even after the constrained experiment ends.",
+      },
+      {
+        id: "relevant_return",
+        title: "Create one relevant return moment",
+        tradeoff: "Lifecycle focus",
+        revision:
+          "Define one product-relevant follow-up moment for the exposed cohort and avoid broad promotional messaging during the test.",
+        adaptation:
+          "The retention plan is narrowed to one relevant lifecycle moment with limited promotional exposure.",
+      },
+    ],
+  },
+  revenue: {
+    label: "Revenue logic",
+    prompt: "Which economic rule should govern the revision?",
+    coaching: "Make the cost, upside, and stopping point visible before the team ships.",
+    choices: [
+      {
+        id: "margin_floor",
+        title: "Set a hard margin floor",
+        tradeoff: "Downside protection",
+        revision:
+          "Require the revised treatment to remain above a defined contribution-margin floor for the exposed cohort before it can scale.",
+        adaptation:
+          "Revenue logic now includes a hard economic boundary that directly responds to the constraint.",
+      },
+      {
+        id: "incremental_profit",
+        title: "Fund only incremental profit",
+        tradeoff: "Causal economics",
+        revision:
+          "Count value only when incremental gross profit exceeds the intervention, incentive, and fulfillment costs relative to a control.",
+        adaptation:
+          "The model shifts from gross conversion to incremental profit after all treatment costs.",
+      },
+      {
+        id: "bounded_payback",
+        title: "Bound the payback window",
+        tradeoff: "Time discipline",
+        revision:
+          "Accept near-term cost only when the selected cohort can recover it through contribution profit inside a predefined payback window.",
+        adaptation:
+          "Revenue logic now limits both the amount and duration of the investment under pressure.",
+      },
+    ],
+  },
+  success_metrics: {
+    label: "Success metrics",
+    prompt: "What evidence should control the revised decision?",
+    coaching: "Choose a measurement system that can tell the team to scale, revise, or stop.",
+    choices: [
+      {
+        id: "signal_outcome_guardrail",
+        title: "Use a three-part scorecard",
+        tradeoff: "Balanced evidence",
+        revision:
+          "Track one leading behavior, completed-order conversion, and contribution margin per session with thresholds set before launch.",
+        adaptation:
+          "Measurement now balances an early signal, a business outcome, and an economic guardrail.",
+      },
+      {
+        id: "control_cohort",
+        title: "Prove incrementality",
+        tradeoff: "Causal confidence",
+        revision:
+          "Compare a bounded exposed cohort with a control on completed orders, contribution profit, cancellations, and refunds.",
+        adaptation:
+          "Measurement adds a control so the team can distinguish true lift from shifted or discounted demand.",
+      },
+      {
+        id: "stop_rule",
+        title: "Precommit to a stop rule",
+        tradeoff: "Decision speed",
+        revision:
+          "Define the minimum improvement, maximum acceptable downside, decision date, and owner before the revised treatment starts.",
+        adaptation:
+          "Measurement now includes a precommitted stop rule that prevents the constrained test from drifting.",
+      },
+    ],
+  },
+} as const satisfies Record<CanvasKey, RevisionDecision>;
+
+export const ECOMMERCE_REVISION_STRATEGIES = {
+  keep: {
+    label: "Keep",
+    prompt: "What remains strong enough to preserve?",
+    coaching: "Protect the part of the original strategy that still creates coherence after the pressure test.",
+    choices: [
+      {
+        id: "core_hypothesis",
+        title: "Keep the core hypothesis",
+        tradeoff: "Strategic continuity",
+        response:
+          "Keep the original customer behavior hypothesis because the constraint changes execution, not the underlying need the experiment is testing.",
+      },
+      {
+        id: "customer_focus",
+        title: "Keep the customer focus",
+        tradeoff: "Problem discipline",
+        response:
+          "Keep the defined customer and observable barrier because they remain the clearest basis for a focused experiment.",
+      },
+      {
+        id: "economic_guardrail",
+        title: "Keep the economic guardrail",
+        tradeoff: "Business discipline",
+        response:
+          "Keep the commitment to contribution quality because conversion growth is not useful if the revised plan destroys sustainable margin.",
+      },
+    ],
+  },
+  remove: {
+    label: "Remove",
+    prompt: "What should the team deliberately remove?",
+    coaching: "A credible revision gives something up instead of quietly expanding the plan.",
+    choices: [
+      {
+        id: "broad_exposure",
+        title: "Remove broad exposure",
+        tradeoff: "Smaller reach",
+        response:
+          "Remove broad treatment exposure because it spends capacity on low-signal customers and makes the constraint harder to control.",
+      },
+      {
+        id: "bundled_scope",
+        title: "Remove bundled scope",
+        tradeoff: "Fewer features",
+        response:
+          "Remove secondary features and parallel interventions so one meaningful change can be shipped and interpreted inside the available window.",
+      },
+      {
+        id: "unsupported_assumption",
+        title: "Remove the weakest assumption",
+        tradeoff: "Less certainty",
+        response:
+          "Remove the assumption that conversion alone proves value; the revision must demonstrate incremental customer and economic impact.",
+      },
+    ],
+  },
+  measure: {
+    label: "Measure",
+    prompt: "How will the team know the revision worked?",
+    coaching: "Select the evidence that will trigger a clear scale, revise, or stop decision.",
+    choices: [
+      {
+        id: "balanced_thresholds",
+        title: "Use balanced thresholds",
+        tradeoff: "Outcome + guardrail",
+        response:
+          "The revision works only if the leading behavior and completed-order conversion improve while contribution margin remains above its predefined floor.",
+      },
+      {
+        id: "control_comparison",
+        title: "Compare with a control",
+        tradeoff: "Incrementality",
+        response:
+          "The revision works when the exposed cohort produces a credible incremental lift over control without higher cancellations, refunds, or discount leakage.",
+      },
+      {
+        id: "decision_rule",
+        title: "Use a decision rule",
+        tradeoff: "Fast action",
+        response:
+          "At the decision date, scale only if the minimum lift is reached, revise if learning is positive but incomplete, and stop if any guardrail fails.",
+      },
+    ],
+  },
+} as const satisfies Record<RevisionStrategyKey, RevisionStrategyDecision>;
 
 export function scenarioPrompt() {
   return [

@@ -133,7 +133,7 @@ export function CanvasForm({ sessionId, initial }: { sessionId: string; initial?
                   aria-current={isActive ? "step" : undefined}
                   aria-label={`Open ${ECOMMERCE_CANVAS_DECISIONS[key].label}`}
                   className={cn(
-                    "flex h-10 items-center justify-center gap-1 rounded-lg border text-xs font-medium transition-colors",
+                    "flex h-10 cursor-pointer items-center justify-center gap-1 rounded-lg border text-xs font-medium transition-colors",
                     isActive
                       ? "border-primary bg-primary text-primary-foreground"
                       : "border-white/10 bg-background/40 text-muted-foreground hover:border-primary/40 hover:text-foreground",
@@ -197,7 +197,7 @@ export function CanvasForm({ sessionId, initial }: { sessionId: string; initial?
             <button
               aria-pressed={activeAnswer.choiceId === CUSTOM_CHOICE}
               className={cn(
-                "mt-3 flex w-full items-center gap-3 rounded-xl border border-dashed p-4 text-left text-sm transition-colors hover:border-primary/45 hover:bg-primary/[0.035]",
+                "mt-3 flex w-full cursor-pointer items-center gap-3 rounded-xl border border-dashed p-4 text-left text-sm transition-colors hover:border-primary/45 hover:bg-primary/[0.035]",
                 activeAnswer.choiceId === CUSTOM_CHOICE && "border-primary bg-primary/[0.07]",
               )}
               onClick={() => updateActiveAnswer({ choiceId: CUSTOM_CHOICE, detail: "" })}
