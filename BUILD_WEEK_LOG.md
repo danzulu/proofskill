@@ -39,11 +39,22 @@ All dates and times use America/Bogota.
 - Captured public, PII-free screenshots and uploaded the Devpost thumbnail.
 - Reworked README, architecture, security, video, and Devpost materials for judges.
 
+## July 20, 2026 - final assessment experience and local handoff
+
+- Made authenticated assessment starts Live AI only and retained `/demo` as the visibly precomputed public demonstration.
+- Added explicit processing overlays for strategy submission, revision locking, final-decision submission, and evaluation retry.
+- Replaced the final writing fields with four required guided decision-card groups: strategic path, rationale, first action, and stop guardrail.
+- Ran the focused suite successfully: 8 files and 27 tests passed.
+- Ran `npm run check` successfully: lint, TypeScript, 14 Vitest files / 41 tests, and the Next.js production build passed.
+- Recorded that `npm run test:e2e` needs a reachable app server: the current script targets localhost or `E2E_BASE_URL` but does not launch one. The public-demo E2E rerun and all Preview/Production manual checks remain pending.
+
 ## Remaining submission actions
 
 - Enable Supabase leaked-password protection or document the final decision.
 - Complete a final two-account cross-user isolation check and Google OAuth incognito smoke test.
 - Create and verify the judge account; share credentials only in Devpost's private field.
+- Run the public-demo E2E suite against a running local server or Preview URL.
+- Deploy the tested commit to Preview and complete the assessment-flow checks before promoting the exact artifact to Production.
 - Record and upload the public YouTube video under three minutes.
 - Run `/feedback` in the Codex task containing most of the core work and copy its Session ID.
 - Complete the remaining Devpost fields and submit before the internal deadline: July 21 at 4:00 p.m. Bogota.

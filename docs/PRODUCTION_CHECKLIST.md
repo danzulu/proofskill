@@ -1,6 +1,6 @@
 # Production and submission checklist
 
-Status last reviewed: July 19, 2026 (America/Bogota).
+Status last reviewed: July 20, 2026 (America/Bogota).
 
 ## Supabase
 
@@ -35,7 +35,11 @@ Status last reviewed: July 19, 2026 (America/Bogota).
 - [x] Environment variables applied and redeployed.
 - [x] Login, dashboard, public demo, and live assessment exercised in Production.
 - [x] Application favicon/icon deployed.
-- [x] Local lint, typecheck, tests, E2E, and production build gates pass.
+- [x] Focused local suite: 8 files / 27 tests passed.
+- [x] `npm run check`: lint, typecheck, 14 Vitest files / 41 tests, and production build passed.
+- [ ] `npm run test:e2e` public-demo rerun: the script targets localhost or `E2E_BASE_URL` but does not start an app server; the July 20 command stopped at `ERR_CONNECTION_REFUSED` for localhost:3000.
+- [ ] Preview verification of the exact tested commit: `/assessment/new` exposes only Live AI Assessment; Submit strategy shows saving and GPT-5.6 generation; Lock revision shows its processing overlay; the final decision has four required card groups and no writing fields; Submit for evaluation and evaluation retry show processing; a dashboard refresh reopens the completed report; and `/demo` remains public and visibly precomputed.
+- [ ] Promote that verified Preview artifact to Production, then repeat the preceding flow in an incognito window with the prepared judge account.
 - [ ] Final incognito smoke: judge login, Google login, dashboard, live flow, saved report, public demo.
 - [ ] Confirm no new runtime errors after the final smoke test.
 
