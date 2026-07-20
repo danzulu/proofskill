@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ProcessingOverlay } from "@/components/processing-overlay";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,6 +26,8 @@ type GuidedAnswer = {
 };
 
 type GuidedAnswers = Record<CanvasKey, GuidedAnswer>;
+
+type CanvasPhase = "idle" | "saving" | "generating" | "navigating";
 
 function createInitialAnswers(initial?: Canvas | null): GuidedAnswers {
   return Object.fromEntries(
@@ -56,9 +59,10 @@ function composeAnswer(key: CanvasKey, answer: GuidedAnswer) {
 export function CanvasForm({ sessionId, initial }: { sessionId: string; initial?: Canvas | null }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [answers, setAnswers] = useState<GuidedAnswers>(() => createInitialAnswers(initial));
-  const [pending, setPending] = useState(false);
+  const [phase, setPhase] = useState<CanvasPhase>("idle");
   const [error, setError] = useState("");
   const router = useRouter();
+  const busy = phase !== "idle";
   const activeKey = canvasKeys[activeIndex];
   const decision = ECOMMERCE_CANVAS_DECISIONS[activeKey];
   const activeAnswer = answers[activeKey];
@@ -75,37 +79,69 @@ export function CanvasForm({ sessionId, initial }: { sessionId: string; initial?
   }
 
   async function submit(formData: FormData) {
-    setPending(true);
+    setPhase("saving");
     setError("");
-    const canvas = Object.fromEntries(canvasKeys.map((key) => [key, formData.get(key)]));
-    const initialResponse = await fetch(`/api/sessions/${sessionId}/initial`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(canvas),
-    });
-    const initialResult = (await initialResponse.json()) as ApiResult<unknown>;
-    if (initialResult.error) {
-      setError(initialResult.error.message);
-      setPending(false);
-      return;
+    let initialSaved = false;
+    try {
+      const canvas = Object.fromEntries(canvasKeys.map((key) => [key, formData.get(key)]));
+      const initialResponse = await fetch(`/api/sessions/${sessionId}/initial`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(canvas),
+      });
+      const initialResult = (await initialResponse.json()) as ApiResult<unknown>;
+      if (initialResult.error) throw new Error(initialResult.error.message);
+      initialSaved = true;
+      setPhase("generating");
+      const constraintResponse = await fetch(`/api/sessions/${sessionId}/constraint`, {
+        method: "POST",
+      });
+      const constraintResult = (await constraintResponse.json()) as ApiResult<unknown>;
+      if (constraintResult.error) throw new Error(constraintResult.error.message);
+      setPhase("navigating");
+      router.push(constraintResult.next_path || `/assessment/${sessionId}/constraint`);
+    } catch (caught) {
+      setError(
+        caught instanceof Error
+          ? caught.message
+          : "The strategy could not be processed. Check your connection and try again.",
+      );
+      setPhase("idle");
+      if (initialSaved) router.refresh();
     }
-    const constraintResponse = await fetch(`/api/sessions/${sessionId}/constraint`, {
-      method: "POST",
-    });
-    const constraintResult = (await constraintResponse.json()) as ApiResult<unknown>;
-    if (constraintResult.error) {
-      setError(constraintResult.error.message);
-      setPending(false);
-      return;
-    }
-    router.push(constraintResult.next_path || `/assessment/${sessionId}/constraint`);
   }
 
   return (
-    <form action={submit} className="space-y-6">
-      {canvasKeys.map((key) => (
-        <input key={key} name={key} type="hidden" value={composeAnswer(key, answers[key])} />
-      ))}
+    <form
+      aria-busy={busy}
+      onSubmit={(event) => {
+        event.preventDefault();
+        void submit(new FormData(event.currentTarget));
+      }}
+    >
+      {phase === "saving" && (
+        <ProcessingOverlay
+          description="ProofSkill is securely saving your eight decisions before the pressure test begins."
+          title="Saving your strategy"
+        />
+      )}
+      {phase === "generating" && (
+        <ProcessingOverlay
+          description="The model is reviewing the full strategy and generating a material constraint. This can take several seconds."
+          title="GPT-5.6 is creating your pressure test"
+        />
+      )}
+      {phase === "navigating" && (
+        <ProcessingOverlay
+          description="Opening the adaptive constraint and the decisions it affects."
+          title="Pressure test ready"
+        />
+      )}
+
+      <fieldset className="m-0 min-w-0 space-y-6 border-0 p-0" disabled={busy}>
+        {canvasKeys.map((key) => (
+          <input key={key} name={key} type="hidden" value={composeAnswer(key, answers[key])} />
+        ))}
 
       <Card className="overflow-hidden border-primary/20 bg-card/85">
         <CardHeader className="space-y-5 border-b border-white/8 bg-primary/[0.035]">
@@ -259,7 +295,7 @@ export function CanvasForm({ sessionId, initial }: { sessionId: string; initial?
         </div>
         <div className="flex items-center justify-end gap-2">
           <Button
-            disabled={activeIndex === 0 || pending}
+            disabled={activeIndex === 0 || busy}
             onClick={() => setActiveIndex((index) => Math.max(0, index - 1))}
             type="button"
             variant="outline"
@@ -267,13 +303,13 @@ export function CanvasForm({ sessionId, initial }: { sessionId: string; initial?
             <ChevronLeft /> Back
           </Button>
           {isLastDecision ? (
-            <Button disabled={pending || completedCount !== canvasKeys.length} size="lg" type="submit">
-              {pending ? <Loader2 className="animate-spin" /> : <Sparkles />}
-              {pending ? "Generating pressure test…" : "Submit strategy"}
+            <Button disabled={busy || completedCount !== canvasKeys.length} size="lg" type="submit">
+              {busy ? <Loader2 className="animate-spin" /> : <Sparkles />}
+              {busy ? "Generating pressure test…" : "Submit strategy"}
             </Button>
           ) : (
             <Button
-              disabled={currentValue.length < 20 || pending}
+              disabled={currentValue.length < 20 || busy}
               onClick={() => setActiveIndex((index) => Math.min(canvasKeys.length - 1, index + 1))}
               size="lg"
               type="button"
@@ -283,6 +319,7 @@ export function CanvasForm({ sessionId, initial }: { sessionId: string; initial?
           )}
         </div>
       </div>
+      </fieldset>
     </form>
   );
 }

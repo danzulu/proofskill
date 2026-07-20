@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ProcessingOverlay } from "@/components/processing-overlay";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
@@ -36,6 +37,20 @@ import { cn } from "@/lib/utils";
 
 const CUSTOM_CHOICE = "custom";
 const strategyKeys: RevisionStrategyKey[] = ["keep", "remove", "measure"];
+
+type RevisionPhase = "idle" | "saving" | "navigating";
+
+const revisionProcessing = {
+  saving: {
+    title: "Locking your revision",
+    description:
+      "ProofSkill is saving every adaptation, preserved choice, removal, and measurement rule.",
+  },
+  navigating: {
+    title: "Revision locked",
+    description: "Opening the final critical decision.",
+  },
+} as const;
 
 const labels: Record<CanvasKey, string> = {
   problem: "Problem",
@@ -161,9 +176,11 @@ export function RevisionForm({
   const [answers, setAnswers] = useState<GuidedRevisionAnswers>(() =>
     createInitialAnswers(steps),
   );
-  const [pending, setPending] = useState(false);
+  const [phase, setPhase] = useState<RevisionPhase>("idle");
   const [error, setError] = useState("");
   const router = useRouter();
+  const busy = phase !== "idle";
+  const processing = phase === "idle" ? null : revisionProcessing[phase];
 
   const activeStep = steps[activeIndex];
   const activeAnswer = answers[activeStep.id];
@@ -204,7 +221,7 @@ export function RevisionForm({
   }
 
   async function submit() {
-    setPending(true);
+    setPhase("saving");
     setError("");
 
     const revised_canvas: Canvas = { ...initial };
@@ -228,20 +245,35 @@ export function RevisionForm({
         body: JSON.stringify({ revised_canvas, revision_strategy }),
       });
       const result = (await response.json()) as ApiResult<unknown>;
-      if (result.error) {
-        setError(result.error.message);
-        setPending(false);
-        return;
-      }
+      if (result.error) throw new Error(result.error.message);
+      setPhase("navigating");
       router.push(result.next_path || `/assessment/${sessionId}/decision`);
-    } catch {
-      setError("The revision could not be saved. Check your connection and try again.");
-      setPending(false);
+    } catch (caught) {
+      setError(
+        caught instanceof Error
+          ? caught.message
+          : "The revision could not be saved. Check your connection and try again.",
+      );
+      setPhase("idle");
     }
   }
 
   return (
-    <form action={submit} className="space-y-6">
+    <form
+      aria-busy={busy}
+      onSubmit={(event) => {
+        event.preventDefault();
+        void submit();
+      }}
+    >
+      {processing && (
+        <ProcessingOverlay
+          description={processing.description}
+          title={processing.title}
+        />
+      )}
+
+      <fieldset className="m-0 min-w-0 space-y-6 border-0 p-0" disabled={busy}>
       <Card className="border-amber-400/25 bg-amber-400/5">
         <CardHeader>
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-amber-300">
@@ -490,7 +522,7 @@ export function RevisionForm({
         </div>
         <div className="flex items-center justify-end gap-2">
           <Button
-            disabled={activeIndex === 0 || pending}
+            disabled={activeIndex === 0 || busy}
             onClick={() => setActiveIndex((index) => Math.max(0, index - 1))}
             type="button"
             variant="outline"
@@ -498,13 +530,13 @@ export function RevisionForm({
             <ChevronLeft /> Back
           </Button>
           {isLastStep ? (
-            <Button disabled={pending || completedCount !== steps.length} size="lg" type="submit">
-              {pending ? <Loader2 className="animate-spin" /> : <LockKeyhole />}
-              {pending ? "Saving…" : "Lock revision"}
+            <Button disabled={busy || completedCount !== steps.length} size="lg" type="submit">
+              {busy ? <Loader2 className="animate-spin" /> : <LockKeyhole />}
+              {busy ? "Saving…" : "Lock revision"}
             </Button>
           ) : (
             <Button
-              disabled={!currentComplete || pending}
+              disabled={!currentComplete || busy}
               onClick={() => setActiveIndex((index) => Math.min(steps.length - 1, index + 1))}
               size="lg"
               type="button"
@@ -514,6 +546,7 @@ export function RevisionForm({
           )}
         </div>
       </div>
+      </fieldset>
     </form>
   );
 }
