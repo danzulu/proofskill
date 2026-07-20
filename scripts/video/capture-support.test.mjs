@@ -33,6 +33,37 @@ test("accepts one 1920x1080 VP8 video stream with positive duration", () => {
   );
 });
 
+test("rejects invalid demo clip probe data", () => {
+  const validVideo = {
+    codec_type: "video",
+    codec_name: "vp8",
+    width: 1920,
+    height: 1080,
+    r_frame_rate: "25/1",
+  };
+  const validProbe = {
+    streams: [validVideo],
+    format: { duration: "4.2", tags: { ENCODER: "Lavf" } },
+    chapters: [],
+  };
+  const cases = [
+    ["1280x720", { ...validProbe, streams: [{ ...validVideo, width: 1280, height: 720 }] }, /1920x1080/],
+    ["audio stream", { ...validProbe, streams: [validVideo, { codec_type: "audio", codec_name: "opus" }] }, /no non-video/],
+    ["zero duration", { ...validProbe, format: { ...validProbe.format, duration: "0" } }, /positive duration/],
+    ["chapters", { ...validProbe, chapters: [{ id: 1 }] }, /no chapters/],
+    ["unknown codec", { ...validProbe, streams: [{ ...validVideo, codec_name: "h264" }] }, /unexpected video codec/],
+    ["zero frame rate", { ...validProbe, streams: [{ ...validVideo, r_frame_rate: "0/1" }] }, /positive frame rate/],
+    ["malformed frame rate", { ...validProbe, streams: [{ ...validVideo, r_frame_rate: "not-a-rate" }] }, /positive frame rate/],
+    ["container title", { ...validProbe, format: { ...validProbe.format, tags: { title: "private" } } }, /unexpected metadata tag/],
+    ["stream comment", { ...validProbe, streams: [{ ...validVideo, tags: { COMMENT: "private" } }] }, /unexpected metadata tag/],
+    ["stream description", { ...validProbe, streams: [{ ...validVideo, tags: { description: "private" } }] }, /unexpected metadata tag/],
+  ];
+
+  for (const [name, probe, expected] of cases) {
+    assert.match(validateProbe(probe).join("\n"), expected, name);
+  }
+});
+
 test("installs an exact paragraph email mask before the first navigation", () => {
   const maskIndex = captureScript.indexOf("await page.addInitScript");
   const navigationIndex = captureScript.indexOf('await page.goto("/login?next=/dashboard")');
