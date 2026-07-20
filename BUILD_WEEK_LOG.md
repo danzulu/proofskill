@@ -46,21 +46,28 @@ All dates and times use America/Bogota.
 - Replaced the final writing fields with four required guided decision-card groups: strategic path, rationale, first action, and stop guardrail.
 - Historical pre-final-review verification (superseded): the focused suite passed 8 files / 27 tests.
 - Historical pre-final-review verification (superseded): `npm run check` passed lint, TypeScript, 14 Vitest files / 41 tests, and the Next.js production build.
-- Made `npm run test:e2e` self-contained: it starts and waits for the local development server, reuses an existing local server outside CI, and skips the launcher when `E2E_BASE_URL` targets an external environment. The public-demo E2E test passed; all Preview/Production manual checks remain pending.
+- Made `npm run test:e2e` self-contained: it starts and waits for the local development server, reuses an existing local server outside CI, and skips the launcher when `E2E_BASE_URL` targets an external environment. The public-demo E2E test passed; the later Preview and Production release checks are recorded below.
 
 ## July 20, 2026 - final review recovery verification
 
 - Implemented safe reconciliation for ambiguous non-idempotent assessment mutations and session creation without automatic replay.
 - Exact-head focused verification passed: 7 files / 31 tests.
 - Exact-head `npm run check` passed: lint, TypeScript, 15 Vitest files / 51 tests, and the Next.js production build.
-- Exact-head `npm run test:e2e` passed the public-demo test (1/1). Preview and Production manual checks remain pending.
+- Exact-head `npm run test:e2e` passed the public-demo test (1/1).
+
+## July 20, 2026 - verified Vercel release
+
+- Verified Preview deployment `dpl_4fZDq1S8dGg9Qk3GVrXzdjwCtM4m` through the complete authenticated Live AI flow: live-only start, strategy processing, GPT-5.6 constraint, guided revision, four-card critical decision, evaluation processing, persisted report, dashboard reopen, and visibly precomputed public demo.
+- The live report completed with model `gpt-5.6-sol`, score 65, verified source quotes, and persisted history.
+- Promoted that exact Preview artifact to Production as deployment `dpl_CZc9roEpt4jQDC8a1MyL5uxHvoWG` at https://proofskill-blond.vercel.app.
+- Production smoke-tested judge login, dashboard, live-only assessment entry, saved live report, and public demo. The post-smoke Vercel runtime logs contained no new error, fatal, or warning entries.
+- Verified the judge account and its saved report. Credentials remain outside the repository and are reserved for Devpost's private judging instructions.
+- Pushed the verified `main` branch to the public GitHub repository.
 
 ## Remaining submission actions
 
 - Enable Supabase leaked-password protection or document the final decision.
 - Complete a final two-account cross-user isolation check and Google OAuth incognito smoke test.
-- Create and verify the judge account; share credentials only in Devpost's private field.
-- Deploy the tested commit to Preview and complete the assessment-flow checks before promoting the exact artifact to Production.
 - Record and upload the public YouTube video under three minutes.
 - Run `/feedback` in the Codex task containing most of the core work and copy its Session ID.
 - Complete the remaining Devpost fields and submit before the internal deadline: July 21 at 4:00 p.m. Bogota.

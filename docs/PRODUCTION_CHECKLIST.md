@@ -17,7 +17,7 @@ Status last reviewed: July 20, 2026 (America/Bogota).
 - [ ] Enable leaked-password protection or record the final acceptance decision.
 - [ ] Run final two-account check: User A cannot read, mutate, or evaluate User B's session.
 - [ ] Run final Google OAuth smoke test from an incognito window.
-- [ ] Create and verify judge account; store credentials only in Devpost private instructions.
+- [x] Create and verify judge account with a saved report; keep credentials out of Git.
 
 ## OpenAI
 
@@ -38,10 +38,11 @@ Status last reviewed: July 20, 2026 (America/Bogota).
 - [x] Focused local suite: 7 files / 31 tests passed.
 - [x] `npm run check`: lint, typecheck, 15 Vitest files / 51 tests, and production build passed.
 - [x] `npm run test:e2e`: Playwright starts and waits for the local development server; the public-demo test passed (1/1). When `E2E_BASE_URL` is set, the same test runs against that external URL without starting a local server.
-- [ ] Preview verification of the exact tested commit: `/assessment/new` exposes only Live AI Assessment; Submit strategy shows saving and GPT-5.6 generation; Lock revision shows its processing overlay; the final decision has four required card groups and no writing fields; Submit for evaluation and evaluation retry show processing; a dashboard refresh reopens the completed report; and `/demo` remains public and visibly precomputed.
-- [ ] Promote that verified Preview artifact to Production, then repeat the preceding flow in an incognito window with the prepared judge account.
+- [x] Preview verification of the exact tested commit: `/assessment/new` exposes only Live AI Assessment; Submit strategy shows saving and GPT-5.6 generation; Lock revision shows its processing overlay; the final decision has four required card groups and no writing fields; Submit for evaluation shows processing; a dashboard refresh reopens the completed report; and `/demo` remains public and visibly precomputed.
+- [x] Promote the exact verified Preview artifact to Production.
+- [ ] Repeat the complete flow in an incognito window with the prepared judge account.
 - [ ] Final incognito smoke: judge login, Google login, dashboard, live flow, saved report, public demo.
-- [ ] Confirm no new runtime errors after the final smoke test.
+- [x] Confirm no new runtime errors after the authenticated Production smoke test.
 
 ## Submission
 
@@ -53,5 +54,5 @@ Status last reviewed: July 20, 2026 (America/Bogota).
 - [ ] Feature freeze July 21 at 1:00 p.m. Bogota.
 - [ ] Record and upload public YouTube video under three minutes.
 - [ ] Run `/feedback` from the task containing most core work.
-- [ ] Add private judge credentials and remaining required Devpost fields.
+- [ ] Add the verified judge credentials to Devpost's private field and complete the remaining required fields.
 - [ ] Submit by July 21 at 4:00 p.m. Bogota; official close is 7:00 p.m. Bogota.

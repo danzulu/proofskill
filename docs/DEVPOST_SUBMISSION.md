@@ -91,7 +91,8 @@ Never commit the completed credentials to GitHub.
 - [x] Public labeled demo
 - [x] Thumbnail and screenshots
 - [x] README, architecture, setup, sample data, and tests
-- [ ] Judge account and private instructions
+- [x] Judge account created, confirmed, and verified with a saved report
+- [ ] Judge credentials copied only into Devpost's private instructions
 - [ ] Public YouTube video under three minutes
 - [ ] `/feedback` Session ID
 - [ ] Final Devpost review and submission
