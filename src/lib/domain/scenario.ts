@@ -75,6 +75,85 @@ export const ECOMMERCE_SCENARIO = {
         detail: "Split exposure, define a guardrail, and preserve the option to stop.",
       },
     ],
+    details: {
+      rationale: {
+        prompt: "Why is this trade-off defensible?",
+        choices: [
+          {
+            id: "economic_quality",
+            title: "Protect economic quality",
+            tradeoff: "Durability",
+            response:
+              "Prioritize contribution quality because growth that depends on unsustainable margin loss is not durable.",
+          },
+          {
+            id: "recover_demand",
+            title: "Recover demand quickly",
+            tradeoff: "Speed",
+            response:
+              "Prioritize a fast recovery in qualified checkout demand while accepting a controlled and temporary economic cost.",
+          },
+          {
+            id: "buy_evidence",
+            title: "Buy evidence before scale",
+            tradeoff: "Learning",
+            response:
+              "Use a bounded test because credible evidence is more valuable than committing the full budget under uncertainty.",
+          },
+        ],
+      },
+      first_action: {
+        prompt: "What happens in the first 48 hours?",
+        choices: [
+          {
+            id: "define_cohort",
+            title: "Define the cohort",
+            tradeoff: "Focus",
+            response:
+              "Define the eligible cohort, baseline current performance, and assign one accountable owner before launch.",
+          },
+          {
+            id: "ship_reversible",
+            title: "Ship one reversible move",
+            tradeoff: "Momentum",
+            response:
+              "Ship one reversible treatment to the highest-intent cohort and verify its instrumentation within 48 hours.",
+          },
+          {
+            id: "create_control",
+            title: "Create the control",
+            tradeoff: "Causal proof",
+            response:
+              "Create exposed and control cohorts, confirm event tracking, and publish the decision thresholds before launch.",
+          },
+        ],
+      },
+      guardrail: {
+        prompt: "What makes you stop?",
+        choices: [
+          {
+            id: "margin_floor",
+            title: "Margin floor fails",
+            tradeoff: "Economics",
+            response: "Stop if contribution margin per session falls below the predefined floor.",
+          },
+          {
+            id: "trust_signal",
+            title: "Trust deteriorates",
+            tradeoff: "Customer risk",
+            response:
+              "Stop if cancellations, refunds, or customer complaints rise beyond the agreed threshold.",
+          },
+          {
+            id: "lift_not_reached",
+            title: "Minimum lift is missed",
+            tradeoff: "Decision discipline",
+            response:
+              "Stop at the decision date if minimum incremental lift is not reached or any guardrail fails.",
+          },
+        ],
+      },
+    },
   },
 } as const;
 

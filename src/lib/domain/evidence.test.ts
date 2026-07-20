@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { validateEvidence, validateEvidenceSet } from "./evidence";
 import type { EvaluationInput } from "./assessment";
+import { ECOMMERCE_SCENARIO } from "./scenario";
 
 const text = "Mobile shoppers abandon checkout after unexpected delivery costs appear.";
 const input = {
@@ -62,5 +63,25 @@ describe("evidence verification", () => {
     expect(validateEvidence(input, { ...valid, exact_quote: "invented sentence" })).toBe(false);
     expect(validateEvidenceSet(input, [valid])[0].valid).toBe(true);
   });
+
+  it.each(["rationale", "first_action", "guardrail"] as const)(
+    "verifies guided critical-decision evidence at %s",
+    (key) => {
+      const response = ECOMMERCE_SCENARIO.criticalDecision.details[key].choices[0].response;
+      const guidedInput = {
+        ...input,
+        critical_decision: { ...input.critical_decision, [key]: response },
+      } satisfies EvaluationInput;
+      expect(
+        validateEvidence(guidedInput, {
+          competency: "decision_quality",
+          kind: "positive",
+          source_path: `critical_decision.${key}`,
+          exact_quote: response,
+          explanation: "The selected response makes the final decision explicit.",
+        }),
+      ).toBe(true);
+    },
+  );
 });
 
