@@ -99,6 +99,19 @@ test("installs an exact paragraph email mask before the first navigation", () =>
   assert.match(captureScript, /textContent\?\.trim\(\) === email/);
 });
 
+test("uses an exact dashboard pathname wait after credential login", () => {
+  const loginStart = captureScript.indexOf('await page.goto("/login?next=/dashboard")');
+  const assessmentStart = captureScript.indexOf('await page.goto("/assessment/new")', loginStart);
+  assert.ok(loginStart >= 0 && assessmentStart > loginStart, "expected the login block");
+
+  const loginBlock = captureScript.slice(loginStart, assessmentStart);
+  assert.doesNotMatch(loginBlock, /page\.waitForURL\("\*\*\/dashboard"/);
+  assert.match(
+    loginBlock,
+    /page\.waitForURL\(\(url\) => url\.pathname === "\/dashboard", \{ timeout: 30_000 \}\)/,
+  );
+});
+
 test("guards browser handles and attempts context and browser cleanup independently", () => {
   assert.match(captureScript, /let browser;\s+let context;\s+let page;/);
   assert.match(captureScript, /try \{\s+browser = await chromium\.launch/);
