@@ -12,6 +12,7 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "proofskill-app/**",
+    ".worktrees/**",
     "next-env.d.ts",
   ]),
 ]);
