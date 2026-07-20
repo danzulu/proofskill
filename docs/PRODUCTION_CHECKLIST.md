@@ -14,7 +14,7 @@ Status last reviewed: July 20, 2026 (America/Bogota).
 - [x] Production SITE_URL and application redirect behavior configured.
 - [x] Direct authenticated score/evidence writes are not granted.
 - [x] Security and Performance Advisors reviewed and documented.
-- [ ] Decide whether to upgrade Supabase Free to Pro and enable leaked-password protection, or explicitly accept the limitation for the hackathon MVP.
+- [x] Project owner explicitly accepted Supabase Free for the hackathon MVP on July 20; leaked-password protection remains a known limitation to revisit before long-term production use.
 - [x] Run final two-account Production check: User A cannot read, mutate, or evaluate User B's session; direct writes fail; cleanup leaves zero temporary users.
 - [ ] Run final Google OAuth smoke test from an incognito window.
 - [x] Create and verify judge account with a saved report; keep credentials out of Git.
@@ -52,7 +52,7 @@ Status last reviewed: July 20, 2026 (America/Bogota).
 - [x] Thumbnail uploaded and PII-free screenshots captured.
 - [x] Video script targets 2:45-2:55 and explains GPT-5.6 and Codex.
 - [ ] Feature freeze July 21 at 1:00 p.m. Bogota.
-- [ ] Record and upload public YouTube video under three minutes.
+- [ ] Record and upload a public YouTube video under three minutes using real product footage and an AI-assisted voiceover, which the official Build Week guidance explicitly permits.
 - [ ] Run `/feedback` from the task containing most core work.
 - [ ] Add the verified judge credentials to Devpost's private field and complete the remaining required fields.
 - [ ] Submit by July 21 at 4:00 p.m. Bogota; official close is 7:00 p.m. Bogota.

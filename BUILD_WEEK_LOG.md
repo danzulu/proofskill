@@ -64,11 +64,12 @@ All dates and times use America/Bogota.
 - Verified the judge account and its saved report. Credentials remain outside the repository and are reserved for Devpost's private judging instructions.
 - Ran the final Production two-account isolation test with temporary confirmed users: owner and child reads were isolated, direct mutations and forged scores were rejected, cross-user report/evaluation/mutation routes disclosed no data and made no changes, and cleanup left zero temporary users.
 - Pushed the verified `main` branch to the public GitHub repository.
+- The project owner explicitly accepted remaining on Supabase Free for the hackathon MVP. Leaked-password protection remains a documented limitation to revisit before long-term production use.
+- Revalidated the official Build Week guidance: AI-assisted demo voiceover is permitted; the submission will pair it with real ProofSkill footage and the required Codex and GPT-5.6 explanation.
 
 ## Remaining submission actions
 
-- Enable Supabase leaked-password protection or document the final decision.
 - Complete the Google OAuth incognito smoke test.
-- Record and upload the public YouTube video under three minutes.
+- Record real product footage, add the permitted AI-assisted voiceover, and upload the public YouTube video under three minutes.
 - Run `/feedback` in the Codex task containing most of the core work and copy its Session ID.
 - Complete the remaining Devpost fields and submit before the internal deadline: July 21 at 4:00 p.m. Bogota.

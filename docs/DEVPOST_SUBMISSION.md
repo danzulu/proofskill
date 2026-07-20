@@ -88,6 +88,7 @@ Never commit the completed credentials to GitHub.
 
 - Live Devpost check on July 20: the ProofSkill project page is published at https://devpost.com/software/proofskill and the account is registered for OpenAI Build Week, but the project has not yet been submitted to the hackathon.
 - Required deliverables still missing in Devpost: a public YouTube demo under three minutes and the `/feedback` Session ID.
+- Official Build Week guidance explicitly allows an AI-assisted voiceover. The compliant plan is real ProofSkill screen capture plus AI narration that explains the product, Codex, and GPT-5.6; music alone is insufficient.
 - Submission closes July 21, 2026 at 5:00 p.m. Pacific / 7:00 p.m. Bogota. The internal target remains 4:00 p.m. Bogota.
 
 - [x] Public repository and MIT license

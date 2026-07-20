@@ -27,7 +27,7 @@ This document records the production security audit and disposable two-account a
 
 ### Security Advisor
 
-One warning remains: leaked-password protection is disabled. The project is on Supabase Free, while HaveIBeenPwned password protection is available on Pro and above. Enabling it therefore requires an authorized plan upgrade; otherwise the limitation must be explicitly accepted for the hackathon MVP.
+One warning remains: leaked-password protection is disabled. The project is on Supabase Free, while HaveIBeenPwned password protection is available on Pro and above. On July 20, the project owner explicitly accepted this known limitation for the hackathon MVP. Use of a unique judge password remains required, and the control must be reconsidered before ongoing production use.
 
 Reference: https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection
 
