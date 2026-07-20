@@ -4,11 +4,15 @@ import path from "node:path";
 import {
   CLIPS,
   PRODUCTION_URL,
+  assertExpectedProductionRoute,
   assertFreshOutputDirectory,
+  completeClipCapture,
+  isExpectedProductionRoute,
   requireCaptureCredentials,
 } from "./capture-support.mjs";
 
 const outputDirectory = path.resolve("submission-video/raw");
+const productionOrigin = new URL(PRODUCTION_URL).origin;
 const dryRun = process.argv.includes("--dry-run");
 const credentials = requireCaptureCredentials(process.env);
 assertFreshOutputDirectory(outputDirectory);
@@ -45,13 +49,15 @@ async function clip(name, scenario) {
     size: { width: 1920, height: 1080 },
     quality: 90,
   });
-  try {
-    await hold(1000);
-    await scenario();
-    await hold(1400);
-  } finally {
-    await page.screencast.stop();
-  }
+  await completeClipCapture({
+    scenario: async () => {
+      await hold(1000);
+      await scenario();
+      await hold(1400);
+    },
+    stop: () => page.screencast.stop(),
+    onSuccess: () => console.log(`Captured ${name}`),
+  });
 }
 
 try {
@@ -82,16 +88,21 @@ try {
   }, credentials.email);
 
   await page.goto("/login?next=/dashboard");
+  assertExpectedProductionRoute(new URL(page.url()), productionOrigin, "/login");
   await page.getByLabel("Email").fill(credentials.email);
   await page.getByLabel("Password").fill(credentials.password);
   await Promise.all([
-    page.waitForURL((url) => url.pathname === "/dashboard", { timeout: 30_000 }),
+    page.waitForURL(
+      (url) => isExpectedProductionRoute(url, productionOrigin, "/dashboard"),
+      { timeout: 30_000 },
+    ),
     page.getByRole("button", { name: "Sign in" }).click(),
   ]);
 
   let sessionId = "";
 
   await page.goto("/dashboard");
+  assertExpectedProductionRoute(new URL(page.url()), productionOrigin, "/dashboard");
   await hideJudgeEmail();
   await clip(CLIPS[0], async () => {
     await expect(page.getByRole("heading", { name: "Your proof, over time" })).toBeVisible();
@@ -99,9 +110,17 @@ try {
   });
 
   await page.goto("/assessment/new");
+  assertExpectedProductionRoute(new URL(page.url()), productionOrigin, "/assessment/new");
   await clip(CLIPS[1], async () => {
     await page.getByRole("button", { name: "Start live assessment" }).click();
-    await page.waitForURL(/\/assessment\/[^/]+\/challenge$/, { timeout: 30_000 });
+    await page.waitForURL(
+      (url) => isExpectedProductionRoute(
+        url,
+        productionOrigin,
+        /^\/assessment\/[^/]+\/challenge$/,
+      ),
+      { timeout: 30_000 },
+    );
     sessionId = new URL(page.url()).pathname.split("/")[2];
     const choices = [
       "problem-mobile_friction",
@@ -124,7 +143,14 @@ try {
     await expect(
       page.getByRole("status").filter({ hasText: "GPT-5.6 is creating your pressure test" }),
     ).toBeVisible({ timeout: 15_000 });
-    await page.waitForURL(`**/assessment/${sessionId}/constraint`, { timeout: 90_000 });
+    await page.waitForURL(
+      (url) => isExpectedProductionRoute(
+        url,
+        productionOrigin,
+        `/assessment/${sessionId}/constraint`,
+      ),
+      { timeout: 90_000 },
+    );
   });
 
   await clip(CLIPS[2], async () => {
@@ -170,7 +196,14 @@ try {
     await expect(page.getByRole("status").filter({ hasText: "Revision locked" })).toBeVisible({
       timeout: 15_000,
     });
-    await page.waitForURL(`**/assessment/${sessionId}/decision`, { timeout: 30_000 });
+    await page.waitForURL(
+      (url) => isExpectedProductionRoute(
+        url,
+        productionOrigin,
+        `/assessment/${sessionId}/decision`,
+      ),
+      { timeout: 30_000 },
+    );
   });
 
   await clip(CLIPS[4], async () => {
@@ -187,7 +220,10 @@ try {
     await expect(
       page.getByRole("status").filter({ hasText: "GPT-5.6 is evaluating your evidence" }),
     ).toBeVisible({ timeout: 15_000 });
-    await page.waitForURL(`**/results/${sessionId}`, { timeout: 90_000 });
+    await page.waitForURL(
+      (url) => isExpectedProductionRoute(url, productionOrigin, `/results/${sessionId}`),
+      { timeout: 90_000 },
+    );
   });
 
   await clip(CLIPS[5], async () => {
@@ -204,7 +240,10 @@ try {
 
   await clip(CLIPS[6], async () => {
     await Promise.all([
-      page.waitForURL("**/dashboard", { timeout: 30_000 }),
+      page.waitForURL(
+        (url) => isExpectedProductionRoute(url, productionOrigin, "/dashboard"),
+        { timeout: 30_000 },
+      ),
       page.getByRole("link", { name: "Back to dashboard" }).click(),
     ]);
     await hideJudgeEmail();
@@ -215,7 +254,10 @@ try {
     await savedReport.hover();
     await hold(700);
     await Promise.all([
-      page.waitForURL(`**/results/${sessionId}`, { timeout: 30_000 }),
+      page.waitForURL(
+        (url) => isExpectedProductionRoute(url, productionOrigin, `/results/${sessionId}`),
+        { timeout: 30_000 },
+      ),
       savedReport.click(),
     ]);
     await expect(page.getByRole("heading", { name: "Your evidence report" })).toBeVisible();
