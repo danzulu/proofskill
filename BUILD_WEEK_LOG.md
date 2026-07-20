@@ -67,9 +67,16 @@ All dates and times use America/Bogota.
 - The project owner explicitly accepted remaining on Supabase Free for the hackathon MVP. Leaked-password protection remains a documented limitation to revisit before long-term production use.
 - Revalidated the official Build Week guidance: AI-assisted demo voiceover is permitted; the submission will pair it with real ProofSkill footage and the required Codex and GPT-5.6 explanation.
 
+## July 20, 2026 - Google OAuth and demo capture acceptance
+
+- Confirmed Google OAuth login against Production without exposing account credentials.
+- Recorded exactly seven Production product-footage clips: `01-dashboard.webm`, `02-guided-strategy.webm`, `03-adaptive-constraint.webm`, `04-guided-revision.webm`, `05-critical-decision.webm`, `06-evidence-report.webm`, and `07-persistence.webm`.
+- `npm run video:verify` accepted all seven 1920x1080 VP8 WebM files, completed full decode and metadata checks, and recorded SHA-256 hashes in QA bundle `2026-07-20T21-58-03-090Z` (July 20, 4:58 p.m. Bogota).
+- Visually reviewed every early/middle/late QA frame (21/21): all showed readable, route-appropriate product UI with no credentials, personal email, browser or desktop chrome, errors, or incomplete unusable loading.
+- Post-capture verification passed `npm run video:test` (9/9) and `npm run lint` with no errors.
+
 ## Remaining submission actions
 
-- Complete the Google OAuth incognito smoke test.
-- Record real product footage, add the permitted AI-assisted voiceover, and upload the public YouTube video under three minutes.
+- Edit the verified product footage, add the permitted AI-assisted voiceover, and upload the public YouTube video under three minutes.
 - Run `/feedback` in the Codex task containing most of the core work and copy its Session ID.
 - Complete the remaining Devpost fields and submit before the internal deadline: July 21 at 4:00 p.m. Bogota.
