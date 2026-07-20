@@ -16,6 +16,9 @@
     "test:e2e": "playwright test",
     "security:isolation": "node --env-file=.env.local scripts/verify-user-isolation.mjs",
     "judge:create": "node --env-file=.env.local scripts/create-judge-account.mjs",
+    "video:test": "node --test scripts/video/capture-support.test.mjs",
+    "video:capture": "node --env-file=.env.local scripts/video/capture-demo-clips.mjs",
+    "video:verify": "node scripts/video/verify-demo-clips.mjs",
     "check": "npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "dependencies": {
