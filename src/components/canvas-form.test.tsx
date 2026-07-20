@@ -103,17 +103,52 @@ describe("CanvasForm processing", () => {
     expect(fetch).toHaveBeenCalledTimes(2);
   });
 
-  it("recovers from an initial request rejection without refreshing", async () => {
+  it("reconciles an ambiguous initial request rejection without losing the strategy", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValueOnce(new Error("Network unavailable")));
     render(<CanvasForm sessionId="session-1" initial={initial} />);
 
     const form = await submitStrategy();
 
-    expect(await screen.findByText("Network unavailable")).toBeInTheDocument();
+    expect(await screen.findByText(
+      "ProofSkill could not confirm whether your strategy was saved. Refreshing the session state so you can continue safely.",
+    )).toBeInTheDocument();
     expect(form).toHaveAttribute("aria-busy", "false");
     expect(screen.getByRole("button", { name: "Submit strategy" })).toBeEnabled();
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
-    expect(refresh).not.toHaveBeenCalled();
+    expect(screen.getByRole("radio", { name: /Balanced scorecard/i })).toBeChecked();
+    expect(refresh).toHaveBeenCalledOnce();
+  });
+
+  it("reconciles malformed initial JSON without exposing parser details", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce({
+      json: async () => { throw new Error("Unexpected token <"); },
+    } as unknown as Response));
+    render(<CanvasForm sessionId="session-1" initial={initial} />);
+
+    const form = await submitStrategy();
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "ProofSkill could not confirm whether your strategy was saved. Refreshing the session state so you can continue safely.",
+    );
+    expect(screen.queryByText(/Unexpected token/)).not.toBeInTheDocument();
+    expect(form).toHaveAttribute("aria-busy", "false");
+    expect(refresh).toHaveBeenCalledOnce();
+  });
+
+  it("refreshes when the initial API reports a state conflict", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce(response({
+      data: null,
+      error: { code: "STATE_CONFLICT", message: "Already submitted", retryable: false },
+    })));
+    render(<CanvasForm sessionId="session-1" initial={initial} />);
+
+    const form = await submitStrategy();
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Your session state changed before ProofSkill could confirm the strategy save. Refreshing so you can continue safely.",
+    );
+    expect(form).toHaveAttribute("aria-busy", "false");
+    expect(refresh).toHaveBeenCalledOnce();
   });
 
   it("refreshes after constraint JSON parsing fails", async () => {
@@ -132,7 +167,10 @@ describe("CanvasForm processing", () => {
 
     const form = await submitStrategy();
 
-    expect(await screen.findByText("Invalid constraint response")).toBeInTheDocument();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "ProofSkill could not confirm whether the pressure test was created. Refreshing the saved session state so you can continue safely.",
+    );
+    expect(screen.queryByText("Invalid constraint response")).not.toBeInTheDocument();
     expect(form).toHaveAttribute("aria-busy", "false");
     expect(refresh).toHaveBeenCalledOnce();
     expect(fetch).toHaveBeenCalledTimes(2);

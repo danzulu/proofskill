@@ -14,7 +14,7 @@ Target duration: 2:45-2:55. Record the real Production app with narration. Use t
 
 **Show:** Sign in with the prepared account, then the dashboard history. Keep the email outside the crop if possible.
 
-## 0:31-1:07 - Guided challenge and processing
+## 0:31-1:05 - Guided challenge and processing
 
 **Voiceover:** "Authenticated starts are Live AI only. The Build Week MVP focuses on one Intermediate e-commerce scenario. Instead of a blank form, the learner builds an eight-part strategy through guided decision cards and can add detail only when it helps."
 
@@ -32,7 +32,7 @@ Target duration: 2:45-2:55. Record the real Production app with narration. Use t
 
 **Show:** Select revision cards, the selected-state treatment, Lock revision, and its processing overlay.
 
-## 1:53-2:10 - Critical decision
+## 1:53-2:07 - Critical decision
 
 **Voiceover:** "A final decision uses four required card groups: strategic path, rationale, first action, and stop guardrail. There are no writing fields, so every choice is explicit and comparable."
 

@@ -146,6 +146,47 @@ describe("DecisionForm", () => {
     }
   });
 
+  it.each([
+    ["response loss", () => Promise.reject(new Error("Failed to fetch"))],
+    ["malformed JSON", () => Promise.resolve({ json: async () => { throw new Error("Unexpected token <"); } } as unknown as Response)],
+  ])("reconciles decision %s while preserving all selections", async (_label, request) => {
+    vi.stubGlobal("fetch", vi.fn().mockImplementationOnce(request));
+    render(<DecisionForm sessionId="session-1" />);
+    const user = await completeDecision();
+    const submit = screen.getByRole("button", { name: "Submit for evaluation" });
+
+    await user.click(submit);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "ProofSkill could not confirm whether your critical decision was saved. Refreshing the session state so you can continue safely.",
+    );
+    expect(screen.queryByText(/Failed to fetch|Unexpected token/)).not.toBeInTheDocument();
+    expect(submit.closest("form")).toHaveAttribute("aria-busy", "false");
+    expect(submit).toBeEnabled();
+    for (const label of guidedLabels) {
+      expect(screen.getByRole("radio", { name: label })).toBeChecked();
+    }
+    expect(refresh).toHaveBeenCalledOnce();
+  });
+
+  it("refreshes when the decision API reports a state conflict", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce(response({
+      data: null,
+      error: { code: "STATE_CONFLICT", message: "Decision already submitted", retryable: false },
+    })));
+    render(<DecisionForm sessionId="session-1" />);
+    const user = await completeDecision();
+    const submit = screen.getByRole("button", { name: "Submit for evaluation" });
+
+    await user.click(submit);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Your session state changed before ProofSkill could confirm the critical decision save. Refreshing so you can continue safely.",
+    );
+    expect(submit.closest("form")).toHaveAttribute("aria-busy", "false");
+    expect(refresh).toHaveBeenCalledOnce();
+  });
+
   it("refreshes the saved session when the evaluation API returns an error", async () => {
     vi.stubGlobal(
       "fetch",

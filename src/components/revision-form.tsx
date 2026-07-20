@@ -38,6 +38,11 @@ import { cn } from "@/lib/utils";
 const CUSTOM_CHOICE = "custom";
 const strategyKeys: RevisionStrategyKey[] = ["keep", "remove", "measure"];
 
+const revisionReconciliationMessage =
+  "ProofSkill could not confirm whether your revision was saved. Refreshing the session state so you can continue safely.";
+const revisionConflictMessage =
+  "Your session state changed before ProofSkill could confirm the revision save. Refreshing so you can continue safely.";
+
 type RevisionPhase = "idle" | "saving" | "navigating";
 
 const revisionProcessing = {
@@ -245,16 +250,22 @@ export function RevisionForm({
         body: JSON.stringify({ revised_canvas, revision_strategy }),
       });
       const result = (await response.json()) as ApiResult<unknown>;
-      if (result.error) throw new Error(result.error.message);
+      if (result.error) {
+        setError(
+          result.error.code === "STATE_CONFLICT"
+            ? revisionConflictMessage
+            : result.error.message,
+        );
+        setPhase("idle");
+        if (result.error.code === "STATE_CONFLICT") router.refresh();
+        return;
+      }
       setPhase("navigating");
       router.push(result.next_path || `/assessment/${sessionId}/decision`);
-    } catch (caught) {
-      setError(
-        caught instanceof Error
-          ? caught.message
-          : "The revision could not be saved. Check your connection and try again.",
-      );
+    } catch {
+      setError(revisionReconciliationMessage);
       setPhase("idle");
+      router.refresh();
     }
   }
 
@@ -531,7 +542,7 @@ export function RevisionForm({
           </Button>
           {isLastStep ? (
             <Button disabled={busy || completedCount !== steps.length} size="lg" type="submit">
-              {busy ? <Loader2 className="animate-spin" /> : <LockKeyhole />}
+              {busy ? <Loader2 className="animate-spin motion-reduce:animate-none" /> : <LockKeyhole />}
               {busy ? "Saving…" : "Lock revision"}
             </Button>
           ) : (

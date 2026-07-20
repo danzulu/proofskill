@@ -20,6 +20,13 @@ import { cn } from "@/lib/utils";
 
 const CUSTOM_CHOICE = "custom";
 
+const initialReconciliationMessage =
+  "ProofSkill could not confirm whether your strategy was saved. Refreshing the session state so you can continue safely.";
+const initialConflictMessage =
+  "Your session state changed before ProofSkill could confirm the strategy save. Refreshing so you can continue safely.";
+const constraintReconciliationMessage =
+  "ProofSkill could not confirm whether the pressure test was created. Refreshing the saved session state so you can continue safely.";
+
 type GuidedAnswer = {
   choiceId: string;
   detail: string;
@@ -90,24 +97,34 @@ export function CanvasForm({ sessionId, initial }: { sessionId: string; initial?
         body: JSON.stringify(canvas),
       });
       const initialResult = (await initialResponse.json()) as ApiResult<unknown>;
-      if (initialResult.error) throw new Error(initialResult.error.message);
+      if (initialResult.error) {
+        setError(
+          initialResult.error.code === "STATE_CONFLICT"
+            ? initialConflictMessage
+            : initialResult.error.message,
+        );
+        setPhase("idle");
+        if (initialResult.error.code === "STATE_CONFLICT") router.refresh();
+        return;
+      }
       initialSaved = true;
       setPhase("generating");
       const constraintResponse = await fetch(`/api/sessions/${sessionId}/constraint`, {
         method: "POST",
       });
       const constraintResult = (await constraintResponse.json()) as ApiResult<unknown>;
-      if (constraintResult.error) throw new Error(constraintResult.error.message);
+      if (constraintResult.error) {
+        setError(constraintResult.error.message);
+        setPhase("idle");
+        router.refresh();
+        return;
+      }
       setPhase("navigating");
       router.push(constraintResult.next_path || `/assessment/${sessionId}/constraint`);
-    } catch (caught) {
-      setError(
-        caught instanceof Error
-          ? caught.message
-          : "The strategy could not be processed. Check your connection and try again.",
-      );
+    } catch {
+      setError(initialSaved ? constraintReconciliationMessage : initialReconciliationMessage);
       setPhase("idle");
-      if (initialSaved) router.refresh();
+      router.refresh();
     }
   }
 
@@ -304,7 +321,7 @@ export function CanvasForm({ sessionId, initial }: { sessionId: string; initial?
           </Button>
           {isLastDecision ? (
             <Button disabled={busy || completedCount !== canvasKeys.length} size="lg" type="submit">
-              {busy ? <Loader2 className="animate-spin" /> : <Sparkles />}
+              {busy ? <Loader2 className="animate-spin motion-reduce:animate-none" /> : <Sparkles />}
               {busy ? "Generating pressure test…" : "Submit strategy"}
             </Button>
           ) : (

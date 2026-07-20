@@ -43,13 +43,16 @@ describe("AssessmentStartPanel", () => {
     expect(push).toHaveBeenCalledWith("/assessment/session-1/challenge");
   });
 
-  it("keeps the live start action available after a network failure", async () => {
+  it("reconciles an uncertain session creation through the dashboard", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("network unavailable")));
     render(<AssessmentStartPanel liveConfigured />);
 
     await userEvent.click(screen.getByRole("button", { name: "Start live assessment" }));
 
-    expect(await screen.findByText("The assessment could not start. Check your connection and try again.")).toHaveAttribute("aria-live", "polite");
-    expect(screen.getByRole("button", { name: "Start live assessment" })).toBeEnabled();
+    expect(await screen.findByText(
+      "ProofSkill could not confirm whether the assessment was created. Check your dashboard before starting another assessment.",
+    )).toHaveAttribute("aria-live", "polite");
+    expect(screen.getByRole("button", { name: "Start live assessment" })).toBeDisabled();
+    expect(screen.getByRole("link", { name: "Check dashboard" })).toHaveAttribute("href", "/dashboard");
   });
 });

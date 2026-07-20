@@ -8,7 +8,8 @@ import { canvasKeys, type Constraint } from "@/lib/domain/assessment";
 import { ECOMMERCE_CANVAS_DECISIONS } from "@/lib/domain/scenario";
 
 const push = vi.fn();
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
+const refresh = vi.fn();
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push, refresh }) }));
 
 const initial = Object.fromEntries(
   canvasKeys.map((key) => [key, ECOMMERCE_CANVAS_DECISIONS[key].choices[0].response]),
@@ -41,6 +42,7 @@ afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
   push.mockReset();
+  refresh.mockReset();
 });
 
 async function completeRevision() {
@@ -94,7 +96,7 @@ describe("RevisionForm processing", () => {
     );
   });
 
-  it("recovers from a request rejection with a retryable error", async () => {
+  it("reconciles a lost revision response and preserves selected choices", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValueOnce(new Error("Revision request failed")));
     render(<RevisionForm sessionId="session-1" initial={initial} constraint={constraint} />);
     const user = await completeRevision();
@@ -103,10 +105,14 @@ describe("RevisionForm processing", () => {
 
     await user.click(submit);
 
-    expect(await screen.findByText("Revision request failed")).toBeInTheDocument();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "ProofSkill could not confirm whether your revision was saved. Refreshing the session state so you can continue safely.",
+    );
     expect(form).toHaveAttribute("aria-busy", "false");
     expect(screen.getByRole("button", { name: "Lock revision" })).toBeEnabled();
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: /Use balanced thresholds/i })).toBeChecked();
+    expect(refresh).toHaveBeenCalledOnce();
   });
 
   it("recovers when the response JSON cannot be parsed", async () => {
@@ -125,8 +131,31 @@ describe("RevisionForm processing", () => {
 
     await user.click(submit);
 
-    expect(await screen.findByText("Invalid revision response")).toBeInTheDocument();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "ProofSkill could not confirm whether your revision was saved. Refreshing the session state so you can continue safely.",
+    );
+    expect(screen.queryByText("Invalid revision response")).not.toBeInTheDocument();
     expect(form).toHaveAttribute("aria-busy", "false");
     expect(screen.getByRole("button", { name: "Lock revision" })).toBeEnabled();
+    expect(screen.getByRole("radio", { name: /Use balanced thresholds/i })).toBeChecked();
+    expect(refresh).toHaveBeenCalledOnce();
+  });
+
+  it("refreshes when the revision API reports a state conflict", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce(response({
+      data: null,
+      error: { code: "STATE_CONFLICT", message: "Revision already submitted", retryable: false },
+    })));
+    render(<RevisionForm sessionId="session-1" initial={initial} constraint={constraint} />);
+    const user = await completeRevision();
+    const submit = screen.getByRole("button", { name: "Lock revision" });
+
+    await user.click(submit);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Your session state changed before ProofSkill could confirm the revision save. Refreshing so you can continue safely.",
+    );
+    expect(submit.closest("form")).toHaveAttribute("aria-busy", "false");
+    expect(refresh).toHaveBeenCalledOnce();
   });
 });

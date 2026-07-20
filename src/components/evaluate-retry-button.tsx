@@ -61,7 +61,7 @@ export function EvaluateRetryButton({ sessionId }: { sessionId: string }) {
         constraint prevents duplicates.
       </p>
       <Button className="mt-6" disabled={pending} onClick={evaluate}>
-        {pending && <Loader2 className="animate-spin" />}
+        {pending && <Loader2 className="animate-spin motion-reduce:animate-none" />}
         {pending ? "Evaluating…" : "Resume evaluation"}
       </Button>
       {error && (

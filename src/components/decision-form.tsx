@@ -19,6 +19,11 @@ import { ECOMMERCE_SCENARIO } from "@/lib/domain/scenario";
 
 type DecisionPhase = "idle" | "saving" | "evaluating" | "navigating";
 
+const decisionReconciliationMessage =
+  "ProofSkill could not confirm whether your critical decision was saved. Refreshing the session state so you can continue safely.";
+const decisionConflictMessage =
+  "Your session state changed before ProofSkill could confirm the critical decision save. Refreshing so you can continue safely.";
+
 const evaluationProcessing = {
   saving: {
     title: "Saving your critical decision",
@@ -69,8 +74,13 @@ export function DecisionForm({ sessionId }: { sessionId: string }) {
       });
       const decision = (await decisionResponse.json()) as ApiResult<unknown>;
       if (decision.error) {
-        setError(decision.error.message);
+        setError(
+          decision.error.code === "STATE_CONFLICT"
+            ? decisionConflictMessage
+            : decision.error.message,
+        );
         setPhase("idle");
+        if (decision.error.code === "STATE_CONFLICT") router.refresh();
         return;
       }
 
@@ -89,16 +99,14 @@ export function DecisionForm({ sessionId }: { sessionId: string }) {
 
       setPhase("navigating");
       router.push(evaluation.next_path || `/results/${sessionId}`);
-    } catch (caught) {
+    } catch {
       setError(
         decisionSaved
           ? "The evaluation connection was interrupted. Refreshing the saved session state."
-          : caught instanceof Error
-            ? caught.message
-            : "The decision could not be saved. Check your connection and try again.",
+          : decisionReconciliationMessage,
       );
       setPhase("idle");
-      if (decisionSaved) router.refresh();
+      router.refresh();
     }
   }
 
@@ -204,7 +212,7 @@ export function DecisionForm({ sessionId }: { sessionId: string }) {
           hidden reasoning.
         </p>
         <Button disabled={busy || !complete} size="lg" type="submit">
-          {busy && <Loader2 className="animate-spin" />}
+          {busy && <Loader2 className="animate-spin motion-reduce:animate-none" />}
           {busy ? "Evaluating…" : "Submit for evaluation"}
         </Button>
       </div>

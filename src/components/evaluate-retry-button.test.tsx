@@ -40,6 +40,7 @@ describe("EvaluateRetryButton", () => {
       "GPT-5.6 is evaluating your evidence",
     );
     expect(retry).toBeDisabled();
+    expect(retry.querySelector("svg")).toHaveClass("motion-reduce:animate-none");
   });
 
   it("navigates to the returned report after evaluation succeeds", async () => {

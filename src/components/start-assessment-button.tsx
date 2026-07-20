@@ -1,17 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { ApiResult } from "@/lib/domain/assessment";
 
+type StartState = "idle" | "pending" | "uncertain";
+
+const startReconciliationMessage =
+  "ProofSkill could not confirm whether the assessment was created. Check your dashboard before starting another assessment.";
+
 export function StartAssessmentButton() {
   const [error, setError] = useState("");
-  const [pending, setPending] = useState(false);
+  const [state, setState] = useState<StartState>("idle");
   const router = useRouter();
   async function start() {
-    setPending(true);
+    setState("pending");
     setError("");
     try {
       const response = await fetch("/api/sessions", {
@@ -22,22 +28,27 @@ export function StartAssessmentButton() {
       const result = (await response.json()) as ApiResult<{ id: string }>;
       if (result.error) {
         setError(result.error.message);
-        setPending(false);
+        setState("idle");
         return;
       }
       router.push(result.next_path || "/dashboard");
     } catch {
-      setError("The assessment could not start. Check your connection and try again.");
-      setPending(false);
+      setError(startReconciliationMessage);
+      setState("uncertain");
     }
   }
   return (
     <div>
-      <Button onClick={start} disabled={pending}>
-        {pending ? <Loader2 className="animate-spin" /> : <ArrowRight />}
+      <Button onClick={start} disabled={state !== "idle"}>
+        {state === "pending" ? <Loader2 className="animate-spin motion-reduce:animate-none" /> : <ArrowRight />}
         Start live assessment
       </Button>
       {error && <p aria-live="polite" className="mt-2 text-sm text-destructive">{error}</p>}
+      {state === "uncertain" && (
+        <Link className="mt-3 inline-flex text-sm font-medium text-primary underline-offset-4 hover:underline" href="/dashboard">
+          Check dashboard
+        </Link>
+      )}
     </div>
   );
 }

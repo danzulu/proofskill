@@ -13,10 +13,13 @@ describe("ProcessingOverlay", () => {
       />,
     );
     const status = screen.getByRole("status");
+    const overlay = status.parentElement?.parentElement;
     expect(status).toHaveAttribute("aria-live", "polite");
     expect(status).toHaveAttribute("aria-atomic", "true");
     expect(status).toHaveTextContent("GPT-5.6 is evaluating your evidence");
     expect(status).toHaveTextContent("This can take up to a minute.");
     expect(status).toHaveTextContent("Keep this page open. Your selections are safe.");
+    expect(overlay).toHaveClass("fixed", "inset-0");
+    expect(status.querySelector("svg")).toHaveClass("motion-reduce:animate-none");
   });
 });
