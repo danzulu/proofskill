@@ -124,7 +124,7 @@ Open `http://localhost:3000`. The public `/demo` route remains a precomputed fix
 - Public fixture report: [proofskill-blond.vercel.app/demo](https://proofskill-blond.vercel.app/demo)
 - The demo is precomputed and visibly marked.
 - Live authenticated attempts are persisted per user and appear in the private dashboard.
-- Judge credentials are created separately and shared only through Devpost's private judging instructions.
+- The judge account is confirmed and verified with a saved report; its credentials are shared only through Devpost's private judging instructions.
 
 ## Verification
 

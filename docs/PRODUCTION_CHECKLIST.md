@@ -33,20 +33,20 @@ Status last reviewed: July 20, 2026 (America/Bogota).
 
 - [x] Public Production deployment is available.
 - [x] Environment variables applied and redeployed.
-- [x] Login, dashboard, public demo, and live assessment exercised in Production.
+- [x] Production deployment `dpl_CZc9roEpt4jQDC8a1MyL5uxHvoWG`: judge login, dashboard, live-only assessment entry, public demo, and saved live report exercised successfully.
 - [x] Application favicon/icon deployed.
 - [x] Focused local suite: 7 files / 31 tests passed.
 - [x] `npm run check`: lint, typecheck, 15 Vitest files / 51 tests, and production build passed.
 - [x] `npm run test:e2e`: Playwright starts and waits for the local development server; the public-demo test passed (1/1). When `E2E_BASE_URL` is set, the same test runs against that external URL without starting a local server.
-- [x] Preview verification of the exact tested commit: `/assessment/new` exposes only Live AI Assessment; Submit strategy shows saving and GPT-5.6 generation; Lock revision shows its processing overlay; the final decision has four required card groups and no writing fields; Submit for evaluation shows processing; a dashboard refresh reopens the completed report; and `/demo` remains public and visibly precomputed.
-- [x] Promote the exact verified Preview artifact to Production.
+- [x] Preview deployment `dpl_4fZDq1S8dGg9Qk3GVrXzdjwCtM4m`: completed the full Live AI flow, verified all processing states, reopened the persisted report from the dashboard, confirmed `/demo` remained visibly precomputed, and reviewed clean runtime logs.
+- [x] Promoted that exact Preview artifact to Production as `dpl_CZc9roEpt4jQDC8a1MyL5uxHvoWG`.
 - [ ] Repeat the complete flow in an incognito window with the prepared judge account.
 - [ ] Final incognito smoke: judge login, Google login, dashboard, live flow, saved report, public demo.
 - [x] Confirm no new runtime errors after the authenticated Production smoke test.
 
 ## Submission
 
-- [x] Public GitHub repository and MIT license.
+- [x] Public GitHub repository and MIT license; `origin/main` synchronized with the verified release documentation.
 - [x] README includes setup, sample/demo data, architecture, tests, and Build Week disclosure.
 - [x] Devpost draft created.
 - [x] Thumbnail uploaded and PII-free screenshots captured.

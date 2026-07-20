@@ -66,7 +66,7 @@ OpenAI GPT-5.6 Sol, OpenAI Responses API, Structured Outputs, Codex, Next.js 16,
 
 ## Private judge instructions template
 
-Paste this only into Devpost's private judging field after creating the account:
+The judge account is verified and the template is ready. Replace the placeholders and paste it only into Devpost's private judging field:
 
 ```text
 Production URL: https://proofskill-blond.vercel.app/login
