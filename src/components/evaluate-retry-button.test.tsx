@@ -6,7 +6,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { EvaluateRetryButton } from "./evaluate-retry-button";
 
 const push = vi.fn();
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
+const refresh = vi.fn();
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push, refresh }) }));
 
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -22,6 +23,7 @@ afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
   push.mockReset();
+  refresh.mockReset();
 });
 
 describe("EvaluateRetryButton", () => {
@@ -72,6 +74,7 @@ describe("EvaluateRetryButton", () => {
     );
     expect(screen.getByRole("button", { name: "Resume evaluation" })).toBeEnabled();
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expect(refresh).toHaveBeenCalledOnce();
   });
 
   it("recovers from a network failure with an actionable message", async () => {
@@ -86,5 +89,6 @@ describe("EvaluateRetryButton", () => {
     );
     expect(screen.getByRole("button", { name: "Resume evaluation" })).toBeEnabled();
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expect(refresh).toHaveBeenCalledOnce();
   });
 });

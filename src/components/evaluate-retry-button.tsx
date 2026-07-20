@@ -30,6 +30,7 @@ export function EvaluateRetryButton({ sessionId }: { sessionId: string }) {
       if (result.error) {
         setError(result.error.message);
         setPending(false);
+        router.refresh();
         return;
       }
       router.push(result.next_path || `/results/${sessionId}`);
@@ -38,6 +39,7 @@ export function EvaluateRetryButton({ sessionId }: { sessionId: string }) {
         "The evaluation connection was interrupted. Check your connection and try again.",
       );
       setPending(false);
+      router.refresh();
     }
   }
 
