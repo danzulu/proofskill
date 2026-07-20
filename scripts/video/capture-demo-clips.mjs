@@ -19,15 +19,13 @@ if (dryRun) {
   process.exit(0);
 }
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({
-  baseURL: PRODUCTION_URL,
-  viewport: { width: 1920, height: 1080 },
-  screen: { width: 1920, height: 1080 },
-  deviceScaleFactor: 1,
-  colorScheme: "dark",
-});
-const page = await context.newPage();
+let browser;
+let context;
+let page;
+
+async function closeCaptureHandle(handle) {
+  if (handle) await handle.close();
+}
 
 async function hold(milliseconds = 900) {
   await page.waitForTimeout(milliseconds);
@@ -57,6 +55,32 @@ async function clip(name, scenario) {
 }
 
 try {
+  browser = await chromium.launch({ headless: true });
+  context = await browser.newContext({
+    baseURL: PRODUCTION_URL,
+    viewport: { width: 1920, height: 1080 },
+    screen: { width: 1920, height: 1080 },
+    deviceScaleFactor: 1,
+    colorScheme: "dark",
+  });
+  page = await context.newPage();
+  await page.addInitScript((email) => {
+    const redact = () => {
+      for (const element of document.querySelectorAll("p")) {
+        if (element.textContent?.trim() === email) {
+          element.textContent = "Private judge account";
+        }
+      }
+    };
+
+    new MutationObserver(redact).observe(document, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+    redact();
+  }, credentials.email);
+
   await page.goto("/login?next=/dashboard");
   await page.getByLabel("Email").fill(credentials.email);
   await page.getByLabel("Password").fill(credentials.password);
@@ -197,6 +221,8 @@ try {
     await expect(page.getByRole("heading", { name: "Your evidence report" })).toBeVisible();
   });
 } finally {
-  await context.close();
-  await browser.close();
+  await Promise.allSettled([
+    closeCaptureHandle(context),
+    closeCaptureHandle(browser),
+  ]);
 }
