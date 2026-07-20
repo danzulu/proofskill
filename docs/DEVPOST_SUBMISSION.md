@@ -86,6 +86,10 @@ Never commit the completed credentials to GitHub.
 
 ## Status
 
+- Live Devpost check on July 20: the ProofSkill project page is published at https://devpost.com/software/proofskill and the account is registered for OpenAI Build Week, but the project has not yet been submitted to the hackathon.
+- Required deliverables still missing in Devpost: a public YouTube demo under three minutes and the `/feedback` Session ID.
+- Submission closes July 21, 2026 at 5:00 p.m. Pacific / 7:00 p.m. Bogota. The internal target remains 4:00 p.m. Bogota.
+
 - [x] Public repository and MIT license
 - [x] Production URL
 - [x] Public labeled demo
