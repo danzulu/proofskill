@@ -35,8 +35,8 @@ Status last reviewed: July 20, 2026 (America/Bogota).
 - [x] Environment variables applied and redeployed.
 - [x] Login, dashboard, public demo, and live assessment exercised in Production.
 - [x] Application favicon/icon deployed.
-- [x] Focused local suite: 8 files / 27 tests passed.
-- [x] `npm run check`: lint, typecheck, 14 Vitest files / 41 tests, and production build passed.
+- [x] Focused local suite: 7 files / 31 tests passed.
+- [x] `npm run check`: lint, typecheck, 15 Vitest files / 51 tests, and production build passed.
 - [x] `npm run test:e2e`: Playwright starts and waits for the local development server; the public-demo test passed (1/1). When `E2E_BASE_URL` is set, the same test runs against that external URL without starting a local server.
 - [ ] Preview verification of the exact tested commit: `/assessment/new` exposes only Live AI Assessment; Submit strategy shows saving and GPT-5.6 generation; Lock revision shows its processing overlay; the final decision has four required card groups and no writing fields; Submit for evaluation and evaluation retry show processing; a dashboard refresh reopens the completed report; and `/demo` remains public and visibly precomputed.
 - [ ] Promote that verified Preview artifact to Production, then repeat the preceding flow in an incognito window with the prepared judge account.

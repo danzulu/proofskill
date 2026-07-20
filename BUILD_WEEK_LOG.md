@@ -44,9 +44,16 @@ All dates and times use America/Bogota.
 - Made authenticated assessment starts Live AI only and retained `/demo` as the visibly precomputed public demonstration.
 - Added explicit processing overlays for strategy submission, revision locking, final-decision submission, and evaluation retry.
 - Replaced the final writing fields with four required guided decision-card groups: strategic path, rationale, first action, and stop guardrail.
-- Ran the focused suite successfully: 8 files and 27 tests passed.
-- Ran `npm run check` successfully: lint, TypeScript, 14 Vitest files / 41 tests, and the Next.js production build passed.
+- Historical pre-final-review verification (superseded): the focused suite passed 8 files / 27 tests.
+- Historical pre-final-review verification (superseded): `npm run check` passed lint, TypeScript, 14 Vitest files / 41 tests, and the Next.js production build.
 - Made `npm run test:e2e` self-contained: it starts and waits for the local development server, reuses an existing local server outside CI, and skips the launcher when `E2E_BASE_URL` targets an external environment. The public-demo E2E test passed; all Preview/Production manual checks remain pending.
+
+## July 20, 2026 - final review recovery verification
+
+- Implemented safe reconciliation for ambiguous non-idempotent assessment mutations and session creation without automatic replay.
+- Exact-head focused verification passed: 7 files / 31 tests.
+- Exact-head `npm run check` passed: lint, TypeScript, 15 Vitest files / 51 tests, and the Next.js production build.
+- Exact-head `npm run test:e2e` passed the public-demo test (1/1). Preview and Production manual checks remain pending.
 
 ## Remaining submission actions
 
