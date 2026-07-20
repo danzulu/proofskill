@@ -30,6 +30,7 @@ export function assertFreshOutputDirectory(directory) {
 
 export function validateProbe(probe) {
   const errors = [];
+  const duration = Number(probe.format?.duration);
   const video = probe.streams?.filter((stream) => stream.codec_type === "video") ?? [];
   const other = probe.streams?.filter((stream) => stream.codec_type !== "video") ?? [];
   if (video.length !== 1) errors.push("expected exactly one video stream");
@@ -37,7 +38,7 @@ export function validateProbe(probe) {
   if (video[0] && !["vp8", "vp9", "av1"].includes(video[0].codec_name)) errors.push("unexpected video codec");
   if (video[0] && (video[0].width !== 1920 || video[0].height !== 1080)) errors.push("expected 1920x1080");
   if (video[0] && !hasPositiveFrameRate(video[0].r_frame_rate)) errors.push("expected positive frame rate");
-  if (!(Number(probe.format?.duration) > 0)) errors.push("expected positive duration");
+  if (!Number.isFinite(duration) || duration <= 0) errors.push("expected positive duration");
   if ((probe.chapters?.length ?? 0) > 0) errors.push("expected no chapters");
   for (const tags of [probe.format?.tags, ...video.map((stream) => stream.tags)]) {
     for (const tag of Object.keys(tags ?? {})) {
@@ -53,7 +54,10 @@ function hasPositiveFrameRate(frameRate) {
   if (!match) return false;
   const numerator = Number(match[1]);
   const denominator = Number(match[2]);
-  return Number.isFinite(numerator) && Number.isFinite(denominator) && numerator > 0 && denominator > 0;
+  const rate = numerator / denominator;
+  return Number.isFinite(numerator) && numerator > 0
+    && Number.isFinite(denominator) && denominator > 0
+    && Number.isFinite(rate) && rate > 0;
 }
 
 function isTechnicalTag(tag) {

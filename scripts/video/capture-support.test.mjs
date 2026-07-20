@@ -64,6 +64,30 @@ test("rejects invalid demo clip probe data", () => {
   }
 });
 
+test("rejects an infinite duration", () => {
+  assert.match(
+    validateProbe({
+      streams: [{ codec_type: "video", codec_name: "vp8", width: 1920, height: 1080, r_frame_rate: "25/1" }],
+      format: { duration: "Infinity", tags: { ENCODER: "Lavf" } },
+      chapters: [],
+    }).join("\n"),
+    /positive duration/,
+  );
+});
+
+test("rejects a frame rate whose quotient is infinite", () => {
+  const numerator = `1${"0".repeat(308)}`;
+  const denominator = `0.${"0".repeat(307)}1`;
+  assert.match(
+    validateProbe({
+      streams: [{ codec_type: "video", codec_name: "vp8", width: 1920, height: 1080, r_frame_rate: `${numerator}/${denominator}` }],
+      format: { duration: "4.2", tags: { ENCODER: "Lavf" } },
+      chapters: [],
+    }).join("\n"),
+    /positive frame rate/,
+  );
+});
+
 test("installs an exact paragraph email mask before the first navigation", () => {
   const maskIndex = captureScript.indexOf("await page.addInitScript");
   const navigationIndex = captureScript.indexOf('await page.goto("/login?next=/dashboard")');
