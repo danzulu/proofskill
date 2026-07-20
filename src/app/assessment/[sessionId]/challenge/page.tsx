@@ -44,9 +44,12 @@ export default async function ChallengePage({
           </CardHeader>
           <CardContent className="space-y-5">
             <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-              This live session remains saved and can continue after <code>OPENAI_API_KEY</code> is added and the deployment is rebuilt. To test the full experience now, start a clearly labeled fixture rehearsal.
+              This live session remains saved and can continue after <code>OPENAI_API_KEY</code> is added and the deployment is rebuilt. You can explore a precomputed assessment without an account in the public demo.
             </p>
-            <Button asChild><Link href="/assessment/new">Start a fixture rehearsal</Link></Button>
+            <div className="flex flex-wrap gap-3">
+              <Button asChild><Link href="/demo">Open the public demo</Link></Button>
+              <Button asChild variant="outline"><Link href="/dashboard">Go to dashboard</Link></Button>
+            </div>
           </CardContent>
         </Card>
       ) : session.status === "challenge" ? (
