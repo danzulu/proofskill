@@ -62,12 +62,13 @@ All dates and times use America/Bogota.
 - Promoted that exact Preview artifact to Production as deployment `dpl_CZc9roEpt4jQDC8a1MyL5uxHvoWG` at https://proofskill-blond.vercel.app.
 - Production smoke-tested judge login, dashboard, live-only assessment entry, saved live report, and public demo. The post-smoke Vercel runtime logs contained no new error, fatal, or warning entries.
 - Verified the judge account and its saved report. Credentials remain outside the repository and are reserved for Devpost's private judging instructions.
+- Ran the final Production two-account isolation test with temporary confirmed users: owner and child reads were isolated, direct mutations and forged scores were rejected, cross-user report/evaluation/mutation routes disclosed no data and made no changes, and cleanup left zero temporary users.
 - Pushed the verified `main` branch to the public GitHub repository.
 
 ## Remaining submission actions
 
 - Enable Supabase leaked-password protection or document the final decision.
-- Complete a final two-account cross-user isolation check and Google OAuth incognito smoke test.
+- Complete the Google OAuth incognito smoke test.
 - Record and upload the public YouTube video under three minutes.
 - Run `/feedback` in the Codex task containing most of the core work and copy its Session ID.
 - Complete the remaining Devpost fields and submit before the internal deadline: July 21 at 4:00 p.m. Bogota.

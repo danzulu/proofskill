@@ -14,8 +14,8 @@ Status last reviewed: July 20, 2026 (America/Bogota).
 - [x] Production SITE_URL and application redirect behavior configured.
 - [x] Direct authenticated score/evidence writes are not granted.
 - [x] Security and Performance Advisors reviewed and documented.
-- [ ] Enable leaked-password protection or record the final acceptance decision.
-- [ ] Run final two-account check: User A cannot read, mutate, or evaluate User B's session.
+- [ ] Decide whether to upgrade Supabase Free to Pro and enable leaked-password protection, or explicitly accept the limitation for the hackathon MVP.
+- [x] Run final two-account Production check: User A cannot read, mutate, or evaluate User B's session; direct writes fail; cleanup leaves zero temporary users.
 - [ ] Run final Google OAuth smoke test from an incognito window.
 - [x] Create and verify judge account with a saved report; keep credentials out of Git.
 

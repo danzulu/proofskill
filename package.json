@@ -14,6 +14,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "security:isolation": "node --env-file=.env.local scripts/verify-user-isolation.mjs",
     "judge:create": "node --env-file=.env.local scripts/create-judge-account.mjs",
     "check": "npm run lint && npm run typecheck && npm run test && npm run build"
   },

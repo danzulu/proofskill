@@ -133,6 +133,7 @@ npm run lint
 npm run typecheck
 npm run test
 npm run test:e2e
+npm run security:isolation
 npm run build
 ```
 
@@ -144,7 +145,9 @@ npm run check
 
 `npm run test:e2e` starts and waits for the local development server automatically. Set `E2E_BASE_URL` to run the same public-demo test against a running Preview or Production URL instead; in that case Playwright does not launch a local server.
 
-Fresh verification on July 20: the focused suite passed 7 files / 31 tests; `npm run test:e2e` passed the public-demo test (1/1); and `npm run check` passed lint, TypeScript, 15 Vitest files / 51 tests, and the production build. The exact tested artifact also passed an authenticated Preview walkthrough, a Production smoke test, and post-smoke Vercel runtime-log review. The remaining manual release checks are the final two-account isolation test and Google OAuth from an incognito window.
+`npm run security:isolation` uses `.env.local` and `NEXT_PUBLIC_SITE_URL` to create two confirmed temporary users, verify direct RLS and authenticated Production-route isolation, revoke their sessions, and delete only those generated users. Set `SECURITY_TEST_BASE_URL` to target another deployed environment.
+
+Fresh verification on July 20: the focused suite passed 7 files / 31 tests; `npm run test:e2e` passed the public-demo test (1/1); and `npm run check` passed lint, TypeScript, 15 Vitest files / 51 tests, and the production build. The exact tested artifact also passed an authenticated Preview walkthrough, a Production smoke test, post-smoke Vercel runtime-log review, and the final two-account isolation test. Google OAuth from an incognito window remains a manual release check.
 
 Coverage includes authentication helpers, state transitions, deterministic scoring, evidence validation, API persistence, guided assessment forms, processing states, and the public-demo end-to-end path.
 
