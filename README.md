@@ -142,9 +142,9 @@ Or run the combined gate:
 npm run check
 ```
 
-For `npm run test:e2e`, start the local app separately with `npm run dev`, or set `E2E_BASE_URL` to a running Preview URL. The Playwright configuration does not start a server itself.
+`npm run test:e2e` starts and waits for the local development server automatically. Set `E2E_BASE_URL` to run the same public-demo test against a running Preview or Production URL instead; in that case Playwright does not launch a local server.
 
-Fresh local verification on July 20: the focused suite passed 8 files / 27 tests; `npm run check` passed lint, TypeScript, 14 Vitest files / 41 tests, and the production build. The public-demo E2E command requires a reachable app server and remains pending rerun against one. Manual Preview and Production verification still remains.
+Fresh local verification on July 20: the focused suite passed 8 files / 27 tests; `npm run test:e2e` passed the public-demo test (1/1); and `npm run check` passed lint, TypeScript, 14 Vitest files / 41 tests, and the production build. Manual Preview and Production verification still remains.
 
 Coverage includes authentication helpers, state transitions, deterministic scoring, evidence validation, API persistence, guided assessment forms, processing states, and the public-demo end-to-end path.
 

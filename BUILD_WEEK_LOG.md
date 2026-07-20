@@ -46,14 +46,13 @@ All dates and times use America/Bogota.
 - Replaced the final writing fields with four required guided decision-card groups: strategic path, rationale, first action, and stop guardrail.
 - Ran the focused suite successfully: 8 files and 27 tests passed.
 - Ran `npm run check` successfully: lint, TypeScript, 14 Vitest files / 41 tests, and the Next.js production build passed.
-- Recorded that `npm run test:e2e` needs a reachable app server: the current script targets localhost or `E2E_BASE_URL` but does not launch one. The public-demo E2E rerun and all Preview/Production manual checks remain pending.
+- Made `npm run test:e2e` self-contained: it starts and waits for the local development server, reuses an existing local server outside CI, and skips the launcher when `E2E_BASE_URL` targets an external environment. The public-demo E2E test passed; all Preview/Production manual checks remain pending.
 
 ## Remaining submission actions
 
 - Enable Supabase leaked-password protection or document the final decision.
 - Complete a final two-account cross-user isolation check and Google OAuth incognito smoke test.
 - Create and verify the judge account; share credentials only in Devpost's private field.
-- Run the public-demo E2E suite against a running local server or Preview URL.
 - Deploy the tested commit to Preview and complete the assessment-flow checks before promoting the exact artifact to Production.
 - Record and upload the public YouTube video under three minutes.
 - Run `/feedback` in the Codex task containing most of the core work and copy its Session ID.
