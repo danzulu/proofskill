@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
 import { cleanup, render, screen } from "@testing-library/react";
+import type { User } from "@supabase/supabase-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import ChallengePage from "./page";
 import { isLiveAIConfigured } from "@/lib/ai/availability";
@@ -24,13 +25,23 @@ vi.mock("@/lib/ai/availability", () => ({ isLiveAIConfigured: vi.fn() }));
 vi.mock("@/lib/auth", () => ({ requireUser: vi.fn() }));
 vi.mock("@/lib/page-data", () => ({ getSessionForPage: vi.fn() }));
 
+const authenticatedUser = {
+  id: "user-1",
+  aud: "authenticated",
+  role: "authenticated",
+  email: "user@example.com",
+  created_at: "2026-07-20T00:00:00.000Z",
+  app_metadata: {},
+  user_metadata: {},
+} satisfies User;
+
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
 });
 
 async function renderChallenge(session: { run_mode: "live" | "fixture" }) {
-  vi.mocked(requireUser).mockResolvedValue(undefined);
+  vi.mocked(requireUser).mockResolvedValue(authenticatedUser);
   vi.mocked(getSessionForPage).mockResolvedValue({
     ...session,
     status: "challenge",
