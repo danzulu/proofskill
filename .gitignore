@@ -24,6 +24,7 @@
 # production
 /build
 /submission-video/raw/
+/submission-video/final/
 
 # misc
 .DS_Store

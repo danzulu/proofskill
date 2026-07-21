@@ -47,9 +47,6 @@ Run on July 20 against Production with `npm run security:isolation`:
 - Authenticated a separate browser context as User B and confirmed the same owned report and idempotent completed-evaluation endpoints returned `200`, with the report remaining completed.
 - Revoked both temporary sessions, deleted only the generated users, and confirmed zero temporary security-test users remained.
 
-## Remaining manual acceptance checks
+## Final manual acceptance
 
-- Run Google OAuth from a fresh incognito window in Production.
-- Copy the already verified judge credentials only into Devpost's private judging field.
-
-These remaining checks are listed explicitly rather than being inferred from schema inspection.
+Google OAuth was verified in Production on July 20. The already verified judge credentials were then copied only into Devpost's private judging field; they remain excluded from Git. No manual security release checks remain.

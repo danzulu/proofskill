@@ -1,6 +1,6 @@
 # ProofSkill final demo script
 
-Target duration: 2:45-2:55. Record the real Production app with narration. Use the prepared judge account; do not create an account or type credentials on screen.
+Final duration: 2:35.3, below the three-minute limit. The verified cut uses the real Production app with AI-assisted narration and never shows account credentials.
 
 ## 0:00-0:17 - Problem and promise
 

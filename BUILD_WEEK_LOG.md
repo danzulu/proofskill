@@ -75,8 +75,18 @@ All dates and times use America/Bogota.
 - Visually reviewed every early/middle/late QA frame (21/21): all showed readable, route-appropriate product UI with no credentials, personal email, browser or desktop chrome, errors, or incomplete unusable loading.
 - Post-capture verification passed `npm run video:test` (9/9) and `npm run lint` with no errors.
 
-## Remaining submission actions
+## Submission closeout
 
-- Edit the verified product footage, add the permitted AI-assisted voiceover, and upload the public YouTube video under three minutes.
-- Run `/feedback` in the Codex task containing most of the core work and copy its Session ID.
-- Complete the remaining Devpost fields and submit before the internal deadline: July 21 at 4:00 p.m. Bogota.
+- Completed the final video edit with the permitted AI-assisted voiceover and published the 2:35.3 demo at https://www.youtube.com/watch?v=n57KMYymFCA.
+- Added the primary Codex task ID as the required `/feedback` Session ID.
+- Added the judge account only to Devpost's private test-instructions field.
+- Submitted ProofSkill to OpenAI Build Week as submission `1108778` on July 20, ahead of both deadlines.
+
+## July 20, 2026 - final video and release refresh
+
+- Pushed capture hardening commit `1db3fd8` to public `main` and verified GitHub synchronization.
+- Built Preview `dpl_6jKaHpdPNx2L22Z8JM82C6DkJ1NK`, verified its protected `/demo` response, and promoted the exact artifact to Production as `dpl_6oB7AXr11UWANSoKqoP6Y4EKgnUZ`.
+- Passed the public-demo E2E check against the refreshed Production alias and a fresh-context judge login, dashboard, Live-AI-only entry, and public-demo smoke test; the post-smoke error-log query returned no events.
+- Rendered the final AI-narrated demo at 2:35.3 in 1920x1080 H.264/AAC. Full decode, audio-level analysis, stream checks, SHA-256 hashing, and 18 representative-frame checks passed.
+- YouTube reported no copyright issues and published the video publicly as `n57KMYymFCA`.
+- Devpost recorded the video URL, Production URL, public repository, Education category, Colombia, Individual submitter type, private judge instructions, and `/feedback` Session ID; the final status is `Submitted`.

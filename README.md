@@ -4,7 +4,7 @@
 
 ProofSkill is an AI-powered product strategy assessment for the Education category. It tests whether someone can make, adapt, and defend a coherent product decision under pressure - then returns a persistent, evidence-backed skill report.
 
-[Live app](https://proofskill-blond.vercel.app) | [Public demo](https://proofskill-blond.vercel.app/demo) | [Devpost draft](https://devpost.com/software/proofskill)
+[Live app](https://proofskill-blond.vercel.app) | [Public demo](https://proofskill-blond.vercel.app/demo) | [Video demo](https://www.youtube.com/watch?v=n57KMYymFCA) | [Devpost submission](https://devpost.com/software/proofskill)
 
 ![ProofSkill product preview](docs/assets/proofskill-thumbnail.png)
 
@@ -147,7 +147,7 @@ npm run check
 
 `npm run security:isolation` uses `.env.local` and `NEXT_PUBLIC_SITE_URL` to create two confirmed temporary users, verify direct RLS and authenticated Production-route isolation, revoke their sessions, and delete only those generated users. Set `SECURITY_TEST_BASE_URL` to target another deployed environment.
 
-Fresh verification on July 20: the focused suite passed 7 files / 31 tests; `npm run test:e2e` passed the public-demo test (1/1); and `npm run check` passed lint, TypeScript, 15 Vitest files / 51 tests, and the production build. The exact tested artifact also passed an authenticated Preview walkthrough, a Production smoke test, post-smoke Vercel runtime-log review, and the final two-account isolation test. Google OAuth from an incognito window remains a manual release check.
+Fresh verification on July 20: the focused suite passed 7 files / 31 tests; `npm run test:e2e` passed the public-demo test (1/1); and `npm run check` passed lint, TypeScript, 15 Vitest files / 51 tests, and the production build. The exact tested artifact also passed an authenticated Preview walkthrough, a Production smoke test, post-smoke Vercel runtime-log review, the final two-account isolation test, and a Production Google OAuth check.
 
 Coverage includes authentication helpers, state transitions, deterministic scoring, evidence validation, API persistence, guided assessment forms, processing states, and the public-demo end-to-end path.
 

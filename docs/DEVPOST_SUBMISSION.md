@@ -10,6 +10,7 @@
 - **Production:** https://proofskill-blond.vercel.app
 - **Public demo:** https://proofskill-blond.vercel.app/demo
 - **Repository:** https://github.com/danzulu/proofskill
+- **Video:** https://www.youtube.com/watch?v=n57KMYymFCA
 - **License:** MIT
 
 ## Description
@@ -61,7 +62,7 @@ OpenAI GPT-5.6 Sol, OpenAI Responses API, Structured Outputs, Codex, Next.js 16,
 - **Country:** Colombia
 - **Category:** Education
 - **Repository URL:** https://github.com/danzulu/proofskill
-- **/feedback Session ID:** pending
+- **/feedback Session ID:** `019f729e-283a-7a03-a3a5-7c14c2cecaee`
 - **Plugin/dev-tool instructions:** not applicable
 
 ## Private judge instructions template
@@ -86,10 +87,11 @@ Never commit the completed credentials to GitHub.
 
 ## Status
 
-- Live Devpost check on July 20: the ProofSkill project page is published at https://devpost.com/software/proofskill and the account is registered for OpenAI Build Week, but the project has not yet been submitted to the hackathon.
-- Required deliverables still missing in Devpost: a public YouTube demo under three minutes and the `/feedback` Session ID.
-- Official Build Week guidance explicitly allows an AI-assisted voiceover. The compliant plan is real ProofSkill screen capture plus AI narration that explains the product, Codex, and GPT-5.6; music alone is insufficient.
-- Submission closes July 21, 2026 at 5:00 p.m. Pacific / 7:00 p.m. Bogota. The internal target remains 4:00 p.m. Bogota.
+- Submitted to OpenAI Build Week on July 20, 2026 at 8:00 p.m. Bogota; Devpost submission ID: `1108778`.
+- Devpost lists the account relationship as both `registered` and `submitted` and retains the Production website URL.
+- The public YouTube demo is 2:35.3, uses real ProofSkill footage plus the permitted AI-assisted narration, and passed YouTube's copyright check with no issues.
+- The primary Codex task ID was entered as the required `/feedback` Session ID.
+- Verified judge credentials were transmitted only to Devpost's private judging field and remain absent from the repository.
 
 - [x] Public repository and MIT license
 - [x] Production URL
@@ -97,7 +99,7 @@ Never commit the completed credentials to GitHub.
 - [x] Thumbnail and screenshots
 - [x] README, architecture, setup, sample data, and tests
 - [x] Judge account created, confirmed, and verified with a saved report
-- [ ] Judge credentials copied only into Devpost's private instructions
-- [ ] Public YouTube video under three minutes
-- [ ] `/feedback` Session ID
-- [ ] Final Devpost review and submission
+- [x] Judge credentials copied only into Devpost's private instructions
+- [x] Public YouTube video under three minutes
+- [x] `/feedback` Session ID
+- [x] Final Devpost review and submission
